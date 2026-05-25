@@ -20,7 +20,7 @@
   <a href="https://github.com/THU-MAIC/OpenMAIC/stargazers"><img src="https://img.shields.io/github/stars/THU-MAIC/OpenMAIC?style=flat-square" alt="Stars"/></a>
   <br/>
   <a href="https://discord.gg/p8Pf2r3SaG"><img src="https://img.shields.io/badge/Discord-Join_Community-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"/></a>
-  &nbsp;
+   
   <a href="community/feishu.md"><img src="https://img.shields.io/badge/Feishu-飞书交流群-00D6B9?style=for-the-badge&logo=bytedance&logoColor=white" alt="飞书群"/></a>
   <br/>
   <img src="https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js" alt="Next.js"/>
@@ -35,7 +35,6 @@
   <br/>
   <a href="https://open.maic.chat/">在线体验</a> · <a href="#-快速开始">快速开始</a> · <a href="#lemonade-local-ai">Lemonade</a> · <a href="#-功能特性">功能特性</a> · <a href="#-使用场景">使用场景</a> · <a href="#-openclaw-集成">OpenClaw</a>
 </p>
-
 
 ## 🗞️ 动态
 
@@ -62,7 +61,8 @@ https://github.com/user-attachments/assets/dbd013f6-9fab-43c5-a788-b47126cff7a8
 ---
 
 > [!TIP]
-> ### <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/openclaw.png" height="28" align="top"/> OpenClaw — 在聊天应用中使用 OpenMAIC，零配置
+>
+> ### `<img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/openclaw.png" height="28" align="top"/>` OpenClaw — 在聊天应用中使用 OpenMAIC，零配置
 >
 > 通过 [OpenClaw](https://github.com/openclaw/openclaw)，你可以直接在飞书、Slack、Discord、Telegram 等 20+ 聊天应用中生成课堂。
 >
@@ -123,7 +123,7 @@ providers:
 
 支持的服务商：**OpenAI**、**Anthropic**、**Google Gemini**、**DeepSeek**、**通义千问 Qwen**、**Kimi**、**MiniMax**、**Grok (xAI)**、**OpenRouter**、**豆包**、**腾讯混元 / TokenHub**、**小米 MiMo**、**智谱 GLM**、**Ollama**（本地）、**Lemonade**（本地 LLM / 图像 / TTS / ASR）以及任何兼容 OpenAI API 的服务。
 
-<a id="lemonade-local-ai"></a>
+`<a id="lemonade-local-ai"></a>`
 
 ### 可选：Lemonade（本地 AI 服务商）
 
@@ -250,11 +250,11 @@ docker compose up --build
 
 **1. 部署 VoxCPM 后端。** 三种部署形态，背后是同一套 OpenMAIC 适配器，在设置里切换即可。
 
-| 后端 | 接口 | 适用场景 |
-| --- | --- | --- |
-| **vLLM-Omni** | `/v1/audio/speech` | OpenAI 兼容的语音接口，适合 GPU 服务器 |
-| **Python API** | `/tts/upload` | 官方 VoxCPM Python 运行时（FastAPI） |
-| **Nano-vLLM** | `/generate` | 轻量级 Nano-vLLM FastAPI 部署 |
+| 后端                 | 接口                 | 适用场景                               |
+| -------------------- | -------------------- | -------------------------------------- |
+| **vLLM-Omni**  | `/v1/audio/speech` | OpenAI 兼容的语音接口，适合 GPU 服务器 |
+| **Python API** | `/tts/upload`      | 官方 VoxCPM Python 运行时（FastAPI）   |
+| **Nano-vLLM**  | `/generate`        | 轻量级 Nano-vLLM FastAPI 部署          |
 
 每种后端的具体启动步骤见 [VoxCPM 仓库](https://github.com/OpenBMB/VoxCPM)。
 
@@ -294,59 +294,6 @@ TTS_VOXCPM_BASE_URL=http://localhost:8000/v1
 <tr>
 <td width="50%" valign="top">
 
-**🌐 3D 可视化**
-
-三维可视化呈现，让抽象结构更直观。
-
-<img src="assets/interactive_mode/3D_interactive.gif" width="100%"/>
-
-</td>
-<td width="50%" valign="top">
-
-**⚙️ 模拟实验**
-
-流程模拟和实验环境，观察动态变化和结果。
-
-<img src="assets/interactive_mode/simulation_interactive.gif" width="100%"/>
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-
-**🎮 游戏**
-
-知识小游戏，通过交互挑战加深理解和记忆。
-
-<img src="assets/interactive_mode/game_interactive.gif" width="100%"/>
-
-</td>
-<td width="50%" valign="top">
-
-**🧭 思维导图**
-
-结构化知识组织，帮助学习者建立整体概念框架。
-
-<img src="assets/interactive_mode/mindmap_interactive.gif" width="100%"/>
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-
-**💻 在线编程**
-
-浏览器内编码和即时运行，边写边学边迭代。
-
-<img src="assets/interactive_mode/code_interactive.gif" width="100%"/>
-
-</td>
-<td width="50%" valign="top">
-
-</td>
-</tr>
-</table>
-
 #### AI 教师引导
 
 AI 教师可以主动操作界面引导学生——高亮关键区域、设置条件、提供提示、在恰当时机引导注意力。
@@ -361,43 +308,21 @@ AI 教师可以主动操作界面引导学生——高亮关键区域、设置�
 <tr>
 <td width="50%" align="center">
 
-**桌面**
-
-<img src="assets/interactive_mode/desktop_interactive.png" width="90%"/>
-
-</td>
-<td width="50%" align="center" rowspan="2">
-
-**手机**
-
-<img src="assets/interactive_mode/phone_interactive.png" width="45%"/>
-
-</td>
-</tr>
-<tr>
-<td width="50%" align="center">
-
-**iPad**
-
-<img src="assets/interactive_mode/ipad_interactive.png" width="90%"/>
-
-</td>
-</tr>
-</table>
-
 #### 需要更完整、更专业的 UI 生成体验？
+
 如果你希望获得功能维度更丰富、交互能力更强，并面向高质量教育界面生产进行深度优化的完整版本，欢迎访问 [MAIC-UI](https://github.com/THU-MAIC/MAIC-UI)。
 
 ### 课堂生成
 
 描述你想学习的内容，或附上参考材料。OpenMAIC 的两阶段流水线自动完成剩余工作：
 
-| 阶段 | 说明 |
-|------|------|
-| **大纲生成** | AI 分析你的输入，生成结构化的课堂大纲 |
+| 阶段               | 说明                                                              |
+| ------------------ | ----------------------------------------------------------------- |
+| **大纲生成** | AI 分析你的输入，生成结构化的课堂大纲                             |
 | **场景生成** | 每个大纲条目生成为丰富的场景——幻灯片、测验、交互模块或 PBL 活动 |
 
 <!-- PLACEHOLDER: 生成流水线 GIF -->
+
 <!-- <img src="assets/generation-pipeline.gif" width="100%"/> -->
 
 ### 课堂组件
@@ -406,81 +331,17 @@ AI 教师可以主动操作界面引导学生——高亮关键区域、设置�
 <tr>
 <td width="50%" valign="top">
 
-**🎓 幻灯片（Slides）**
-
-AI 老师配合聚光灯和激光笔动作进行语音讲解——如同真实课堂。
-
-<img src="assets/slides.gif" width="100%"/>
-
-</td>
-<td width="50%" valign="top">
-
-**🧪 测验（Quiz）**
-
-交互式测验（单选 / 多选 / 简答），支持 AI 实时判分和反馈。
-
-<img src="assets/quiz.gif" width="100%"/>
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-
-**🔬 交互式模拟（Interactive）**
-
-基于 HTML 的交互实验，用于可视化、动手学习——物理模拟器、流程图等。
-
-<img src="assets/interactive.gif" width="100%"/>
-
-</td>
-<td width="50%" valign="top">
-
-**🏗️ 项目制学习（PBL）**
-
-选择一个角色，与 AI 智能体协作完成结构化项目，包含里程碑和交付物。
-
-<img src="assets/pbl.gif" width="100%"/>
-
-</td>
-</tr>
-</table>
-
 ### 多智能体互动
 
 <table>
 <tr>
 <td valign="top">
 
-- **课堂讨论** — 智能体主动发起讨论话题，你可以随时加入或被点名互动
-- **圆桌辩论** — 多个不同人设的智能体围绕话题展开讨论，配合白板讲解
-- **自由问答** — 随时提问，AI 老师通过幻灯片、图表或白板进行解答
-- **白板** — AI 智能体在共享白板上实时绘图——逐步推导方程、绘制流程图、直观讲解概念
-
-</td>
-<td width="360" valign="top">
-
-<img src="assets/discussion.gif" width="340"/>
-
-</td>
-</tr>
-</table>
-
-### <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/openclaw.png" height="22" align="top"/> OpenClaw 集成
+### `<img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/openclaw.png" height="22" align="top"/>` OpenClaw 集成
 
 <table>
 <tr>
 <td valign="top">
-
-OpenMAIC 集成了 [OpenClaw](https://github.com/openclaw/openclaw)——一个连接你日常使用的消息平台（飞书、Slack、Discord、Telegram、WhatsApp 等）的个人 AI 助手。通过这个集成，你可以**直接在聊天应用中生成和查看互动课堂**，无需碰命令行。
-
-</td>
-<td width="360" valign="top">
-
-<img src="assets/openclaw-feishu-demo.gif" width="340"/>
-
-</td>
-</tr>
-</table>
 
 只需告诉你的 OpenClaw 助手你想学什么——剩下的它来搞定：
 
@@ -492,30 +353,15 @@ OpenMAIC 集成了 [OpenClaw](https://github.com/openclaw/openclaw)——一个�
 
 <table><tr><td>
 
-**已上架 ClawHub** — 一行命令安装：
-
-```bash
-clawhub install openmaic
-```
-
-或手动复制：
-
-```bash
-mkdir -p ~/.openclaw/skills
-cp -R /path/to/OpenMAIC/skills/openmaic ~/.openclaw/skills/openmaic
-```
-
-</td></tr></table>
-
 <details>
 <summary>配置与详情</summary>
 
-| 阶段 | skill 会做什么 |
-|------|------|
-| **Clone** | 检测现有仓库，或在执行 clone / 安装依赖前征求确认 |
-| **启动** | 在 `pnpm dev`、`pnpm build && pnpm start`、Docker 之间选择 |
-| **Provider Key** | 推荐配置路径，引导你自己编辑 `.env.local` |
-| **生成** | 提交异步生成任务，轮询进度直到完成 |
+| 阶段                   | skill 会做什么                                                 |
+| ---------------------- | -------------------------------------------------------------- |
+| **Clone**        | 检测现有仓库，或在执行 clone / 安装依赖前征求确认              |
+| **启动**         | 在 `pnpm dev`、`pnpm build && pnpm start`、Docker 之间选择 |
+| **Provider Key** | 推荐配置路径，引导你自己编辑 `.env.local`                    |
+| **生成**         | 提交异步生成任务，轮询进度直到完成                             |
 
 可选配置 `~/.openclaw/openclaw.json`：
 
@@ -541,11 +387,11 @@ cp -R /path/to/OpenMAIC/skills/openmaic ~/.openclaw/skills/openmaic
 
 ### 导出
 
-| 格式 | 说明 |
-|------|------|
-| **PowerPoint (.pptx)** | 可编辑的幻灯片，包含图片、图表和 LaTeX 公式 |
-| **交互式 HTML** | 自包含的网页，包含交互式模拟实验 |
-| **课堂 ZIP** | 完整课堂导出（课程结构 + 媒体文件），可备份或分享 |
+| 格式                         | 说明                                              |
+| ---------------------------- | ------------------------------------------------- |
+| **PowerPoint (.pptx)** | 可编辑的幻灯片，包含图片、图表和 LaTeX 公式       |
+| **交互式 HTML**        | 自包含的网页，包含交互式模拟实验                  |
+| **课堂 ZIP**           | 完整课堂导出（课程结构 + 媒体文件），可备份或分享 |
 
 ### 更多功能
 
@@ -562,37 +408,6 @@ cp -R /path/to/OpenMAIC/skills/openmaic ~/.openclaw/skills/openmaic
 <table>
 <tr>
 <td width="50%" valign="top">
-
-> *"零基础文科生，30 分钟学会 Python"*
-
-<img src="assets/python.gif" width="100%"/>
-
-</td>
-<td width="50%" valign="top">
-
-> *"如何上手阿瓦隆桌游"*
-
-<img src="assets/avalon.gif" width="100%"/>
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-
-> *"分析一下智谱和 MiniMax 的股价"*
-
-<img src="assets/zhipu-minimax.gif" width="100%"/>
-
-</td>
-<td width="50%" valign="top">
-
-> *"DeepSeek 最新论文解析"*
-
-<img src="assets/deepseek.gif" width="100%"/>
-
-</td>
-</tr>
-</table>
 
 ---
 

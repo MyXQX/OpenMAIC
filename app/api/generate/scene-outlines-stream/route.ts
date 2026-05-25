@@ -1,4 +1,40 @@
 /**
+ * app/api/generate/scene-outlines-stream/route.ts
+ * 
+ * 文件作用：
+ * 流式生成课堂场景大纲的API。使用服务端推送事件（SSE）将LLM生成的大纲对象逐个发送给客户端，
+ * 实现增量式大纲显示。这是课堂生成管道的核心步骤，生成各个场景的结构和内容大纲。
+ * 
+ * 运行机理：
+ * 1. 输入参数：
+ *    - 学习需求、PDF内容、代理信息等
+ *    - AI提供者和模型配置
+ * 2. 大纲生成流程：
+ *    - 构建系统提示和用户提示（通过buildPrompt）
+ *    - 调用LLM生成包含多个场景大纲的JSON数组
+ *    - LLM返回格式：{"languageDirective":"...", "outlines":[{type, title, ...}, ...]}
+ * 3. 流式解析：
+ *    - extractLanguageDirective()：从流中提取语言指令（学习场景语言）
+ *    - extractNewOutlines()：从部分JSON增量提取已完成的大纲对象
+ *    - 支持两种JSON格式：平面数组和包装对象
+ * 4. SSE事件：
+ *    - 'languageDirective'：教学语言指令
+ *    - 'outline'：单个场景大纲对象和索引
+ *    - 'done'：全部大纲和语言指令（完成信号）
+ *    - 'error'：错误信息
+ * 5. 与生成管道的关系：
+ *    - 生成大纲后，后续API会基于这些大纲生成具体场景内容
+ *    - 场景类型（slides、quiz、sim等）由大纲中的type字段定义
+ * 
+ * 与其他代码的关联：
+ * - /api/generate-classroom：调用此API获取大纲
+ * - /api/generate/scene-content：基于大纲生成具体场景内容
+ * - /api/generate/scene-actions：生成场景动作和交互
+ * - buildPrompt (lib/prompts)：构建LLM提示词
+ * - streamLLM (lib/ai/llm)：流式调用LLM
+ */
+
+/**
  * Scene Outlines Streaming API (SSE)
  *
  * Streams outline generation via Server-Sent Events.

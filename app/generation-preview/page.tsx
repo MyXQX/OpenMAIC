@@ -1,3 +1,48 @@
+/**
+ * app/generation-preview/page.tsx
+ * 
+ * 文件作用：
+ * 课堂生成预览页面。这是生成流程的可视化步骤显示界面，用户可以在此页面看到课堂生成的进度，
+ * 包括PDF解析、大纲生成、场景内容生成、媒体生成等各个阶段。生成完成后自动跳转到生成的课堂。
+ * 
+ * 运行机理：
+ * 1. 会话状态管理：
+ *    - 从 sessionStorage 恢复生成会话
+ *    - 追踪生成过程的各个阶段（preparing, generating, outline-ready, review, complete）
+ *    - 实时保存会话状态以支持页面刷新恢复
+ * 2. 生成流程步骤：
+ *    - PDF解析：如果有PDF则先解析提取文本和图像
+ *    - 场景大纲生成：调用/api/generate/scene-outlines-stream获取SSE流
+ *    - 大纲审查（可选）：用户可以在生成后审查并修改大纲
+ *    - 场景内容生成：根据大纲生成每个场景的具体内容
+ *    - 媒体生成：并行生成图像、视频、语音等媒体
+ *    - 课堂保存：将生成的课堂数据保存到 IndexedDB
+ * 3. SSE流处理：
+ *    - 订阅 /api/generate/scene-outlines-stream
+ *    - 处理 languageDirective 和 outline 事件
+ *    - 支持用户中途点击停止生成
+ * 4. 步骤可视化：
+ *    - 使用 StepVisualizer 组件显示当前进度
+ *    - 实时更新 currentStepIndex
+ *    - 显示生成状态消息和警告信息
+ * 5. AI代理生成（可选）：
+ *    - 如果启用自动生成，会在此阶段生成课堂的AI代理
+ *    - 显示 AgentRevealModal 动画展示代理信息
+ * 
+ * 与其他代码的关联：
+ * - useSettingsStore (lib/store/settings)：获取LLM和媒体生成配置
+ * - useStageStore (lib/store/stage)：保存生成的课堂数据
+ * - useMediaGenerationStore (lib/store/media-generation)：管理媒体生成任务进度
+ * - useVoxCPMVoiceProfiles (lib/audio/voxcpm-voices)：获取VoxCPM语音配置
+ * - /api/generate/scene-outlines-stream：流式生成大纲
+ * - /api/generate/scene-content：生成场景内容
+ * - /api/generate/agent-profiles：生成AI代理
+ * - /api/generate/image、video、tts：生成媒体资源
+ * - app/classroom/[id]/page.tsx：生成完成后跳转到此页面
+ * - StepVisualizer (app/generation-preview/components/visualizers.tsx)：显示生成步骤
+ * - SessionStorage：'generationSession'键保存会话状态
+ */
+
 'use client';
 
 import { useEffect, useState, Suspense, useRef } from 'react';

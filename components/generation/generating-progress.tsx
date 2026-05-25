@@ -1,3 +1,36 @@
+/**
+ * components/generation/generating-progress.tsx
+ * 
+ * 文件作用：
+ * 生成进度显示组件。在课堂生成过程中实时显示各个步骤的进度状态（等待中、进行中、完成、失败）。
+ * 提供清晰的视觉反馈让用户了解生成的进度。
+ * 
+ * 运行机理：
+ * 1. 步骤列表：
+ *    - 接收 steps 数组，每个步骤包含 id、name、status
+ *    - status 包括：'idle'（未开始）、'processing'（进行中）、'completed'（完成）、'failed'（失败）
+ * 2. 视觉指示器：
+ *    - idle：灰色圆圈
+ *    - processing：旋转的加载器图标（Loader2）
+ *    - completed：绿色勾号（CheckCircle2）
+ *    - failed：红色叉号（XCircle）
+ * 3. 进度卡片：
+ *    - 每个步骤一张卡片
+ *    - 显示步骤名称和状态
+ *    - 可能包含进度百分比或当前进度描述
+ * 4. 动画效果：
+ *    - 步骤完成时显示完成动画
+ *    - 步骤失败时显示错误动画
+ * 5. 当前步骤高亮：
+ *    - 高亮显示当前正在进行的步骤
+ *    - 便于用户快速定位进度
+ * 
+ * 与其他代码的关联：
+ * - app/generation-preview/page.tsx：使用此组件显示生成进度
+ * - lucide-react：图标库
+ * - components/ui/card：卡片UI组件
+ */
+
 'use client';
 
 import { useEffect, useState } from 'react';

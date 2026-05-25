@@ -1,3 +1,36 @@
+/**
+ * components/generation/outlines-editor.tsx
+ * 
+ * 文件作用：
+ * 场景大纲编辑器组件。允许用户在课堂生成后、正式生成内容之前查看和编辑生成的场景大纲。
+ * 用户可以修改大纲中的场景类型、标题、描述等信息。
+ * 
+ * 运行机理：
+ * 1. 大纲显示：
+ *    - 接收 outlines 数组（SceneOutline[] 类型）
+ *    - 每个大纲包含 type（场景类型）、title、description、目标等
+ * 2. 编辑功能：
+ *    - 支持编辑每个大纲的标题和描述
+ *    - 可以修改场景类型（slides, quiz, sim 等）
+ *    - 支持添加或删除大纲项
+ * 3. 键盘交互：
+ *    - ESC 键关闭编辑器或取消操作
+ *    - Enter 键确认编辑
+ *    - 支持在大纲项之间导航
+ * 4. 状态管理：
+ *    - 跟踪编辑状态（编辑前、编辑中、已保存）
+ *    - 防止未保存的更改丢失
+ * 5. 回调处理：
+ *    - onOutlinesChange：大纲改变时调用
+ *    - onConfirm：用户确认修改时调用
+ *    - onCancel：用户取消编辑时调用
+ * 
+ * 与其他代码的关联：
+ * - app/generation-preview/page.tsx：在大纲生成完成后使用此编辑器
+ * - SceneOutline (lib/types/generation)：大纲数据类型
+ * - motion/react：动画效果
+ */
+
 'use client';
 
 import { Fragment, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';

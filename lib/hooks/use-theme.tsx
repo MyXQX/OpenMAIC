@@ -1,3 +1,36 @@
+/**
+ * lib/hooks/use-theme.tsx
+ * 
+ * 文件作用：
+ * 提供主题管理功能（亮色/暗色/系统跟随模式），通过React Context实现全局状态管理，
+ * 支持主题持久化和系统偏好检测。
+ * 
+ * 运行机理：
+ * 1. 主题模式：
+ *    - 'light'：亮色模式
+ *    - 'dark'：暗色模式
+ *    - 'system'：跟随系统设置（默认值）
+ * 2. ThemeProvider 组件：
+ *    - 在根布局中使用，为整个应用提供主题上下文
+ *    - 管理主题状态，应用主题到DOM和localStorage
+ * 3. 主题应用机制：
+ *    - resolvedTheme 计算当前实际主题（如果是system则转换为实际的light/dark）
+ *    - 在document元素上添加/移除'dark'类名
+ *    - CSS使用tailwindcss的dark模式选择器响应
+ * 4. 持久化与同步：
+ *    - localStorage key: 'theme'
+ *    - 从localStorage恢复用户之前的主题选择
+ *    - 侦听系统主题变化（media query）
+ * 5. useTheme() hook：
+ *    - 在组件中使用获取当前主题和setTheme函数
+ *    - 用于主题切换按钮等交互元素
+ * 
+ * 与其他代码的关联：
+ * - app/layout.tsx：使用 ThemeProvider 包裹整个应用
+ * - app/page.tsx：使用 useTheme() hook 实现主题切换按钮
+ * - components/ui/*：使用tailwindcss的dark选择器响应主题变化
+ */
+
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';

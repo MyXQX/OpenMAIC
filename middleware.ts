@@ -1,3 +1,31 @@
+/**
+ * middleware.ts
+ * 
+ * 文件作用：
+ * Next.js 中间件，在请求到达应用前进行访问控制验证。如果设置了 ACCESS_CODE 环境变量，
+ * 则验证所有请求是否持有有效的访问令牌，防止未授权访问。
+ * 
+ * 运行机理：
+ * 1. 验证流程：
+ *    - 检查是否配置了 ACCESS_CODE 环境变量（如果未配置，直接放行所有请求）
+ *    - 白名单检查：/api/access-code/* 和 /api/health 路径免验证
+ *    - Cookie验证：检查 openmaic_access cookie 中是否存在有效的HMAC签名令牌
+ * 2. HMAC令牌验证：
+ *    - 令牌格式：timestamp.signature，使用 HMAC-SHA256 签名
+ *    - verifyToken() 函数使用Web Crypto API验证签名的有效性
+ *    - 使用常数时间比较防止时序攻击
+ * 3. 访问控制决策：
+ *    - API请求 + 无效令牌 → 返回 401 Unauthorized
+ *    - 页面请求 + 无效令牌 → 放行，由前端 AccessCodeGuard 组件显示验证模态框
+ * 4. matcher 配置：仅对实际应用路由生效，排除静态资源和Next.js内部路由
+ * 
+ * 与其他代码的关联：
+ * - AccessCodeGuard (components/access-code-guard)：前端组件，配合中间件实现客户端验证
+ * - /api/access-code/verify：获取新的访问令牌的API端点
+ * - /api/access-code/status：检查访问码状态的API端点
+ * - 所有其他 /api/* 路由：受此中间件保护
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
 
 /** Convert string to Uint8Array */

@@ -1,3 +1,36 @@
+/**
+ * components/chat/chat-area.tsx
+ * 
+ * 文件作用：
+ * 聊天区域组件。在课堂中显示AI代理与用户的对话界面。支持发送消息、接收响应、
+ * 展示对话历史等功能。这是课堂互动的主要界面。
+ * 
+ * 运行机理：
+ * 1. forwardRef 支持：
+ *    - 使用 useImperativeHandle 暴露父组件可以调用的方法
+ *    - 允许父组件控制聊天区域的行为（例如清空消息、获取对话历史）
+ * 2. 消息管理：
+ *    - 维护会话中的消息列表
+ *    - 支持多种消息类型（用户消息、AI消息、系统消息等）
+ *    - 消息持久化到 useImperativeHandle 暴露的接口
+ * 3. 聊天会话：
+ *    - SessionType 定义不同的会话类型
+ *    - 可能支持不同的对话模式（普通聊天、问答等）
+ * 4. 讲座笔记：
+ *    - LectureNoteEntry 记录聊天中的重要笔记
+ *    - 允许用户在聊天中记录学习要点
+ * 5. 交互功能：
+ *    - 消息输入框
+ *    - 发送按钮
+ *    - 消息列表滚动和加载历史消息
+ * 
+ * 与其他代码的关联：
+ * - components/stage.tsx：父组件，集成聊天区域
+ * - SessionType (lib/types/chat)：会话类型定义
+ * - LectureNoteEntry (lib/types/chat)：讲座笔记数据结构
+ * - /api/chat：发送消息到AI代理的API
+ */
+
 'use client';
 
 import { useImperativeHandle, forwardRef, useRef, useCallback, useState, useMemo } from 'react';

@@ -1,4 +1,40 @@
 /**
+ * app/api/generate/tts/route.ts
+ * 
+ * 文件作用：
+ * 单条文本转语音（TTS）的API端点。根据文本内容和语音配置调用TTS提供者（Azure、OpenAI、VoxCPM等）
+ * 生成语音音频。在场景生成后由客户端并行调用，为每个代理的发言生成配套的语音。
+ * 
+ * 运行机理：
+ * 1. 请求体参数：
+ *    - text：要转换的文本（必需）
+ *    - audioId：音频片段的唯一ID（必需，用于跟踪）
+ *    - ttsProviderId：TTS提供者ID（如'azure-tts'、'openai-tts'、'voxcpm'）
+ *    - ttsVoice：声音ID或名称（必需）
+ *    - ttsModelId：（可选）TTS模型ID
+ *    - ttsSpeed：（可选）语速（如1.0表示正常速度）
+ *    - ttsApiKey：（可选）提供者API密钥
+ *    - ttsBaseUrl：（可选）自定义API端点
+ *    - ttsProviderOptions：（可选）提供者特定的选项（如VoxCPM的voicePrompt）
+ * 2. 验证：
+ *    - browser-native-tts 必须在客户端处理，不支持在服务器端生成
+ *    - VoxCPM的自动声音模式需要提供voicePrompt参数
+ * 3. TTS生成：
+ *    - 调用 generateTTS() 执行实际的语音生成
+ *    - 返回base64编码的音频数据
+ * 4. 支持的提供者：
+ *    - Azure TTS：支持多语言和高质量声音
+ *    - OpenAI TTS：支持多种声音和模型
+ *    - VoxCPM：支持中文语音生成和声音克隆
+ * 
+ * 与其他代码的关联：
+ * - generateTTS (lib/audio/tts-providers)：执行TTS生成的核心逻辑
+ * - resolveTTSApiKey/resolveTTSBaseUrl (lib/server/provider-config)：获取TTS配置
+ * - 课堂生成管道：在场景生成后调用此API为每个代理发言生成语音
+ * - 环境变量：AZURE_TTS_KEY、OPENAI_API_KEY、VOXCPM_*等
+ */
+
+/**
  * Single TTS Generation API
  *
  * Generates TTS audio for a single text string and returns base64-encoded audio.

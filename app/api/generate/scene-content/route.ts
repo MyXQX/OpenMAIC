@@ -1,4 +1,37 @@
 /**
+ * app/api/generate/scene-content/route.ts
+ * 
+ * 文件作用：
+ * 场景内容生成API端点。根据场景大纲生成具体的场景内容（幻灯片、测验、交互式活动等）。
+ * 这是两步场景生成管道的第一步，生成内容结构。
+ * 
+ * 运行机理：
+ * 1. 输入参数：
+ *    - 场景大纲：outline（包含类型、标题、描述等）
+ *    - 上下文信息：stage、已生成的 scenes、AI提供者配置等
+ * 2. 内容生成流程：
+ *    - 根据大纲的 type 字段确定内容类型（slides、quiz、sim、topic、discussion）
+ *    - 调用相应的内容生成器或 LLM 生成内容
+ * 3. 生成的内容类型：
+ *    - slides：幻灯片内容（文本、要点列表等）
+ *    - quiz：测验题目和选项
+ *    - sim：交互式模拟场景
+ *    - topic：主题讨论或讲座内容
+ *    - discussion：讨论问题和提示
+ * 4. 输出格式：
+ *    - 返回结构化的内容对象
+ *    - 包含所有必要的数据以供后续渲染和交互
+ * 5. 缓存优化：
+ *    - 可能缓存已生成的内容以加速后续操作
+ * 
+ * 与其他代码的关联：
+ * - /api/generate/scene-actions：处理内容后的下一步
+ * - SceneOutline (lib/types/generation)：场景大纲类型
+ * - SlideContent, QuizContent 等：不同类型的内容结构
+ * - 生成管道中的中间步骤
+ */
+
+/**
  * Scene Content Generation API
  *
  * Generates scene content (slides/quiz/interactive/pbl) from an outline.

@@ -1,3 +1,35 @@
+/**
+ * components/access-code-modal.tsx
+ * 
+ * 文件作用：
+ * 访问码输入模态对话框组件。当应用启用了访问码保护时，显示此模态框供用户输入访问码。
+ * 这是安全访问控制的客户端UI组件。
+ * 
+ * 运行机理：
+ * 1. 模态框控制：
+ *    - isOpen 属性控制模态框是否显示
+ *    - onClose 回调在用户关闭时触发
+ * 2. 访问码输入：
+ *    - 提供文本输入框让用户输入访问码
+ *    - 支持 Enter 键提交
+ * 3. 访问码验证：
+ *    - 用户点击提交按钮时调用 onSubmit 回调
+ *    - onSubmit 回调将访问码发送到服务器验证
+ *    - 服务器通过 /api/access-code/verify 端点验证访问码
+ * 4. 动画效果：
+ *    - 使用 motion/react 提供模态框显示/隐藏的动画
+ *    - AnimatePresence 管理动画组件的生命周期
+ * 5. 多语言支持：
+ *    - 使用 useI18n hook 获取国际化文本
+ *    - 标签、提示、按钮文本都支持多语言
+ * 
+ * 与其他代码的关联：
+ * - components/access-code-guard.tsx：父组件，控制此模态框的显示
+ * - useI18n (lib/hooks/use-i18n)：国际化支持
+ * - motion/react：动画库
+ * - /api/access-code/verify：后端验证端点
+ */
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';

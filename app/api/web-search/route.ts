@@ -1,4 +1,44 @@
 /**
+ * app/api/web-search/route.ts
+ * 
+ * 文件作用：
+ * 网络搜索API端点。根据搜索查询调用配置的网络搜索提供者（Tavily、Brave、Bing、百度等）
+ * 获取网络搜索结果，并将结果格式化为LLM可以理解的上下文。用于课堂生成时进行实时信息检索。
+ * 
+ * 运行机理：
+ * 1. 请求参数：
+ *    - query：搜索查询字符串
+ *    - pdfText：（可选）PDF内容，用于在搜索查询前进行改写
+ *    - providerId：网络搜索提供者ID（Tavily、Brave、Bing、Baidu等）
+ *    - apiKey：提供者API密钥（可选）
+ *    - baseUrl：自定义API端点（可选）
+ *    - baiduSubSources：百度搜索特定的子来源配置
+ * 2. 搜索查询改写：
+ *    - 如果提供了pdfText，可以使用LLM改写查询以包含PDF内容的上下文
+ *    - buildSearchQuery() 函数处理查询改写
+ *    - 默认使用LLM进行改写（可配置为跳过）
+ * 3. 提供者配置：
+ *    - 默认提供者：Tavily
+ *    - resolveWebSearchApiKey() 从环境变量获取API密钥
+ *    - 某些提供者需要API密钥（Tavily、Brave等），某些可能免费
+ * 4. 搜索执行：
+ *    - 调用 searchWeb() 执行实际搜索
+ *    - 返回搜索结果列表
+ * 5. 结果格式化：
+ *    - formatSearchResultsAsContext() 将搜索结果转换为LLM可用的上下文
+ *    - 可以直接注入到生成管道中
+ * 
+ * 与其他代码的关联：
+ * - searchWeb (lib/web-search)：执行网络搜索的核心逻辑
+ * - formatSearchResultsAsContext (lib/web-search)：格式化搜索结果
+ * - buildSearchQuery (lib/server/search-query-builder)：改写搜索查询
+ * - resolveWebSearchApiKey (lib/server/provider-config)：获取搜索提供者配置
+ * - 课堂生成管道：在启用网络搜索时调用此API
+ * - WEB_SEARCH_PROVIDERS (lib/web-search/constants)：定义支持的搜索提供者
+ * - 环境变量：TAVILY_API_KEY、BRAVE_SEARCH_API_KEY等
+ */
+
+/**
  * Web Search API
  *
  * POST /api/web-search

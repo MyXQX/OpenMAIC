@@ -1,3 +1,45 @@
+/**
+ * app/classroom/[id]/page.tsx
+ * 
+ * 文件作用：
+ * 课堂详情页面。展示一个生成的课堂内容，用户在此页面与课堂的各个场景交互。
+ * 这是主要的学习和教学界面，用户可以浏览幻灯片、回答测验、进行交互式活动等。
+ * 
+ * 运行机理：
+ * 1. 课堂加载流程：
+ *    - 从URL参数 [id] 获取课堂ID
+ *    - 首先尝试从 IndexedDB (useStageStore) 加载课堂数据
+ *    - 如果 IndexedDB 没有数据，则从服务器API获取（/api/classroom）
+ *    - 这支持API生成的课堂直接访问
+ * 2. 代理恢复：
+ *    - 检查是否存在生成的AI代理（generatedAgentConfigs）
+ *    - 如果有，则从 IndexedDB 恢复代理配置
+ *    - 如果没有，则使用预设代理（preset mode）
+ *    - 更新 useSettingsStore 中的 selectedAgentIds
+ * 3. 媒体生成继续：
+ *    - 从 IndexedDB 恢复之前未完成的媒体生成任务
+ *    - 自动继续生成剩余的媒体（图像、视频、音频等）
+ *    - 防止跨课堂污染：清空之前课堂的媒体任务
+ * 4. 白板历史管理：
+ *    - 清空上一个课堂的白板历史快照
+ *    - 防止旧数据在新课堂中显示
+ * 5. 场景生成继续：
+ *    - 检查是否有待生成的场景大纲
+ *    - 如果有，自动恢复大纲生成过程
+ *    - 使用之前保存的生成参数和PDF图像
+ * 
+ * 与其他代码的关联：
+ * - useStageStore (lib/store/stage)：加载和管理课堂数据
+ * - useMediaGenerationStore (lib/store/media-generation)：管理媒体生成任务
+ * - useWhiteboardHistoryStore (lib/store/whiteboard-history)：管理白板历史
+ * - useSettingsStore (lib/store/settings)：管理代理选择
+ * - useSceneGenerator (lib/hooks/use-scene-generator)：继续生成缺失场景
+ * - /api/classroom：从服务器获取课堂数据的API
+ * - Stage (components/stage.tsx)：主要的课堂展示组件
+ * - generateMediaForOutlines (lib/media/media-orchestrator)：继续生成媒体
+ * - loadImageMapping (lib/utils/image-storage)：恢复PDF图像映射
+ */
+
 'use client';
 
 import { Stage } from '@/components/stage';

@@ -1,4 +1,38 @@
 /**
+ * app/api/chat/route.ts
+ * 
+ * 文件作用：
+ * 处理课堂中AI代理与用户的对话。这是一个无状态的聊天API，接收客户端的完整状态（消息历史、
+ * 课堂状态、配置），执行一次生成，并通过服务端推送事件（SSE）流式返回结果。
+ * 
+ * 运行机理：
+ * 1. 请求接收与验证：
+ *    - 接收 StatelessChatRequest：包含消息、课堂状态、代理配置、模型API密钥等
+ *    - 验证必填字段：messages（消息历表）、storeState（课堂状态）、config.agentIds（参与代理）
+ * 2. 模型解析：
+ *    - 调用 resolveModel() 确定使用的LLM模型和API密钥
+ *    - 验证API密钥有效性
+ * 3. SSE流式响应：
+ *    - 创建TransformStream用于流式输出
+ *    - 启动心跳机制（每15秒发送一个注释）防止连接超时
+ *    - 调用 statelessGenerate() 生成器逐个产生事件
+ * 4. 事件流：
+ *    - 每个事件序列化为JSON并以SSE格式发送给客户端
+ *    - 事件包括：文本增量、工具调用、完成状态等
+ * 5. 中断处理：
+ *    - 客户端可通过中止fetch请求来中断生成
+ *    - 服务器检测到 signal.aborted 时立即停止生成
+ * 
+ * 与其他代码的关联：
+ * - statelessGenerate (lib/orchestration/stateless-generate)：生成引擎，执行多代理编排
+ * - resolveModel (lib/server/resolve-model)：解析模型字符串并获取LLM实例
+ * - StatelessChatRequest (lib/types/chat)：请求数据结构
+ * - StatelessEvent (lib/types/chat)：响应事件数据结构
+ * - 各LLM提供者模块（OpenAI、Claude、Google等）：通过 statelessGenerate 调用
+ * - 客户端通过 useChat() hook 调用此API并处理SSE流
+ */
+
+/**
  * Stateless Chat API Endpoint
  *
  * POST /api/chat - Send message, receive SSE stream

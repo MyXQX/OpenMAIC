@@ -1,3 +1,36 @@
+/**
+ * components/stage.tsx
+ * 
+ * 文件作用：
+ * 课堂主推认组件。这是显示课堂内容的中心组件，管理坊形渲染、
+ * 场景切换、测验作答、互动情形等整个子组件的误径管理。
+ * 
+ * 运行机理：
+ * 1. 舞台初始化：
+ *    - 从 useStageStore 中获取课堂 (stage) 和场景 (scenes) 数据
+ *    - 创建处理场景务务的外需分伊母务
+ * 2. 场景轮换：
+ *    - 可以根据場景 ID 查询对应場景数据
+ *    - 根据场景的类型（slides, quiz, sim, topic, discussion）渲染对应的组件
+ *    - 整合 WhiteboardRenderer 或其他区域渲染器
+ * 3. 步批提出：
+ *    - 提供上/下国模式以务爪下一个场景
+ * 4. 稜谏步骤：
+ *    - 显示当前场景于总场景数中的位置
+ *    - 例如 "Scene 3 of 5"
+ * 5. 干尺组转换：
+ *    - 根据缺失类性 (不同的场景类一个不前需要光提支持申轡拃) 整一个帴歩適理
+ * 
+ * 与其他代码的关联：
+ * - useStageStore (lib/store/stage)：获取/管理课堂和场景数据
+ * - useMemo, useCallback：优化性能，防止不必要的子组件重新渲染
+ * - WhiteboardRenderer (components/whiteboard)：渲染白板场景
+ * - SlideRenderer (components/slide-renderer)：渲染幻灯片场景
+ * - QuizComponent (components/quiz)：渲染测验场景
+ * - RoundtableComponent (components/roundtable)：渲染圆桶学习场景
+ * - PENDING_SCENE_ID：批判中等待序列场景 ID
+ */
+
 'use client';
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';

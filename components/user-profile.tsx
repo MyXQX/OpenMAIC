@@ -1,3 +1,38 @@
+/**
+ * components/user-profile.tsx
+ * 
+ * 文件作用：
+ * 成泰管理组件。允许用户上罡上出送接收中预石改变下遗传参数：
+ * 样儿、昵称、个性一。整个数据被永久区化于 localStorage。
+ * 
+ * 运行机理：
+ * 1. 样儿管理：
+ *    - 提供 7 个预设样儿选择
+ *    - 用户可以点击样儿选择光一个样儿或上传自定义图片
+ *    - 上传的图片被转换为 base64 存储。
+ * 2. 昵称编辑：
+ *    - 程分一键录入昵称文本
+ *    - 使用 Pencil 图标指示可编辑
+ *    - 使用 Check 图标确认修改
+ * 3. 个性编辑：
+ *    - 提供文本史编辑区域以便编辑个性戗述
+ *    - 支持整丢整列轉换列表的个性信息
+ * 4. 状态管理：
+ *    - 早冬候保存不雄管理 state 深化于 localStorage（'user-profile-storage'）
+ *    - 使用 useUserProfileStore hook 严填整个状态
+ * 5. 动画效果：
+ *    - 使用 motion/react 打造平滑的变化效果
+ *    - 管祀6 世闎样儿期间的效果
+ * 
+ * 与其他代码的关联：
+ * - useUserProfileStore (lib/store/user-profile)：管理成泰状态
+ * - AVATAR_OPTIONS：预设样儿配置数组，来自 lib/store/user-profile
+ * - localStorage ('user-profile-storage')：永久化存储位置
+ * - ui/button, ui/dropdown-menu：不孥体 UI 组件
+ * - Pencil, Check, ImagePlus, ChevronDown：lucide-react 字样
+ * - motion/react：动画效果库
+ */
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';

@@ -1,3 +1,37 @@
+/**
+ * components/header.tsx
+ * 
+ * 文件作用：
+ * 应用程序主头部组件。位于应用的顶部，提供主题切换、
+ * 设置不同的UI主题、语言选择、设置弹出框等功能。
+ * 
+ * 运行机理：
+ * 1. 主题切换：
+ *    - 提供三种主题选择：system, light, dark
+ *    - 使用 useTheme hook 获取/设置当前主题
+ *    - 保存主题值到 localStorage
+ * 2. 设置菜单：
+ *    - 点击设置按钮下拉出设置菜单
+ *    - 提供多种配置策略选项
+ *    - 每个策略对应一种应用设置模式
+ * 3. 设置会话界面：
+ *    - 使用 settingsPopoverOpen 控制是否打开设置弹框
+ *    - 打开时 router.push() 跳转到设置页面
+ * 4. 语言选择器：
+ *    - 集成 LanguageSwitcher 组件进行语言选择
+ *    - 用户利用此特性更改应用的显示语言
+ * 5. 状态管理：
+ *    - 维持 settingsPopoverOpen 状态以控制下拉菜单是否打开
+ *    - 使用 useRouter 实现路由转换
+ * 
+ * 与其他代码的关联：
+ * - useTheme (lib/hooks/use-theme)：管理应用主题
+ * - useI18n (lib/hooks/use-i18n)：国际化支持
+ * - useRouter (next/navigation)：实现路由转换
+ * - LanguageSwitcher (components/language-switcher)：子组件，管理语言选择
+ * - 设置策略配置来自 configs/ 目录
+ */
+
 'use client';
 
 import {

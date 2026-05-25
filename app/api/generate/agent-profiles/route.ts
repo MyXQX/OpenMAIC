@@ -1,4 +1,39 @@
 /**
+ * app/api/generate/agent-profiles/route.ts
+ * 
+ * 文件作用：
+ * 代理配置生成API端点。根据课程阶段信息和场景大纲生成AI代理配置。
+ * 代理包括教师（teacher）、助手（assistant）和学生（student）三个角色。
+ * 
+ * 运行机理：
+ * 1. 输入参数：
+ *    - stage：课程阶段信息（标题、学习目标等）
+ *    - outlines：场景大纲数组
+ *    - 可选的：教学风格、代理偏好等
+ * 2. 代理角色定义：
+ *    - teacher：主教师代理，讲授课程内容
+ *    - assistant：助理代理，提供学习支持和答疑
+ *    - student：学生代理，代表学生角色进行交互
+ * 3. 代理生成流程：
+ *    - 调用 LLM 根据课程信息生成每个角色的配置
+ *    - 每个代理的配置包括：名称、角色描述、个性特点、知识背景等
+ *    - 确保代理之间的互补和一致性
+ * 4. 配置信息：
+ *    - 代理头像或形象选择
+ *    - 代理的语气和表达风格
+ *    - 代理的知识领域和专业背景
+ * 5. 用途：
+ *    - 在课堂中为不同的交互场景使用不同的代理
+ *    - 增强课堂的互动性和沉浸感
+ * 
+ * 与其他代码的关联：
+ * - Stage (lib/types/stage)：课程阶段数据结构
+ * - SceneOutline (lib/types/generation)：场景大纲
+ * - Agent (lib/types/agent)：代理配置数据结构
+ * - /api/chat：聊天API 中使用生成的代理配置
+ */
+
+/**
  * Agent Profiles Generation API
  *
  * Generates agent profiles (teacher, assistant, student) for a course stage

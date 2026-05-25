@@ -1,3 +1,42 @@
+/**
+ * app/page.tsx
+ * 
+ * 文件作用：
+ * OpenMAIC 应用的主页面，提供课堂生成的核心交互界面。用户可以上传PDF、输入学习需求、
+ * 配置生成参数（网络搜索、交互模式等），以及管理已生成的课堂列表。
+ * 
+ * 运行机理：
+ * 1. 客户端组件（'use client'），用React Hooks管理表单状态和课堂数据
+ * 2. 状态管理：
+ *    - form：用户输入的PDF文件、学习需求、搜索和交互模式配置
+ *    - classrooms/thumbnails：存储本地生成的课堂列表和缩略图
+ *    - 使用LocalStorage持久化用户偏好和草稿内容
+ * 3. 核心功能：
+ *    - 支持PDF上传和拖拽
+ *    - 支持文本输入学习需求
+ *    - 连接到 /api/generate-classroom 生成课堂
+ *    - 支持课堂导入/导出和管理
+ *    - 实时显示生成进度和缩略图预览
+ * 4. UI交互：
+ *    - 使用Framer Motion实现动画效果
+ *    - 主题切换（亮/暗色模式）
+ *    - 多语言支持（中文/英文等）
+ *    - 设置对话框配置AI提供者和模型
+ * 
+ * 与其他代码的关联：
+ * - useSettingsStore (lib/store/settings)：读取已配置的LLM提供者（OpenAI、Claude等）
+ * - useUserProfileStore (lib/store/user-profile)：读取和更新用户头像选择
+ * - useMediaGenerationStore (lib/store/media-generation)：追踪媒体生成的进度
+ * - SettingsDialog (components/settings)：提供AI配置界面
+ * - GenerationToolbar (components/generation/generation-toolbar)：显示生成按钮和选项
+ * - AgentBar (components/agent/agent-bar)：显示AI代理列表
+ * - ThumbnailSlide (components/slide-renderer/components/ThumbnailSlide)：渲染课堂缩略图
+ * - /api/generate-classroom：后端API，处理课堂生成逻辑
+ * - /api/generate/scene-outlines-stream：流式API，返回课堂大纲
+ * - useDraftCache (lib/hooks/use-draft-cache)：缓存用户输入的草稿
+ * - useImportClassroom (lib/import/use-import-classroom)：处理课堂导入
+ */
+
 'use client';
 
 import { useState, useEffect, useMemo, useRef, useDeferredValue } from 'react';

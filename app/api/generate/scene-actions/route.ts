@@ -1,4 +1,33 @@
 /**
+ * app/api/generate/scene-actions/route.ts
+ * 
+ * 文件作用：
+ * 场景动作生成API端点。根据场景大纲和内容生成场景的交互动作（actions）。
+ * 然后组装完整的 Scene 对象。这是场景生成管道的最后一步。
+ * 
+ * 运行机理：
+ * 1. 输入参数：
+ *    - 场景大纲：outline（SceneOutline 对象）
+ *    - 场景内容：content（根据场景类型可以是 SlideContent、QuizContent 等）
+ *    - 上下文信息：stage、scenes 等
+ * 2. 动作生成：
+ *    - 调用 LLM 根据大纲和内容生成交互动作
+ *    - 动作定义了用户可以进行的操作（例如点击按钮、选择答案等）
+ *    - 每个动作包含 ID、类型、触发条件、结果等
+ * 3. 场景组装：
+ *    - 将大纲、内容和动作组合成完整的 Scene 对象
+ *    - Scene 对象是完整可用的课堂场景
+ * 4. 媒体生成触发：
+ *    - 在此步骤可能触发媒体生成任务（图像、视频、音频等）
+ * 
+ * 与其他代码的关联：
+ * - /api/generate/scene-content：生成场景内容（前一步）
+ * - SceneOutline (lib/types/generation)：场景大纲类型
+ * - Scene (lib/types/stage)：完整场景类型
+ * - 生成管道中的最后一步，生成完整的场景对象
+ */
+
+/**
  * Scene Actions Generation API
  *
  * Generates actions for a scene given its outline and content,

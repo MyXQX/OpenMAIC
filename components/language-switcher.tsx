@@ -1,3 +1,32 @@
+/**
+ * components/language-switcher.tsx
+ * 
+ * 文件作用：
+ * 语言选择器组件。提供下拉菜单来选择应用的显示语言。
+ * 
+ * 运行机理：
+ * 1. 支持的语言：
+ *    - 提供了 supportedLocales 中配置的所有语言选择
+ *    - 每个语言有描述文本（中文、English 等）
+ * 2. 下拉菜单：
+ *    - 点击下拉显示语言列表
+ *    - 每个项目可以点击进行选择
+ * 3. 语言切换：
+ *    - 点击语言一项时，调用 useI18n hook 的 setLocale 方法
+ *    - useI18n 会自动更新应用的显示语言
+ * 4. 下拉位置：
+ *    - 使用 absolute 定位下拉菜单，右对齐显示
+ * 5. 下拉样式：
+ *    - 使用 handleClose 管理是否打开
+ *    - 提供浮动的 className 样式配置
+ * 
+ * 与其他代码的关联：
+ * - useI18n (lib/hooks/use-i18n)：管理应用语言配置
+ * - supportedLocales (lib/i18n)：支持的语言配置数组
+ * - ui/dropdown-menu：UI下拉菜单组件
+ * - components/header.tsx：父组件，包含此选择器
+ */
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';

@@ -1,4 +1,42 @@
 /**
+ * app/api/generate/image/route.ts
+ * 
+ * 文件作用：
+ * 图像生成API端点。根据文本提示词调用配置的图像生成提供者（DALL-E、Flux、Seedream等）
+ * 生成图像。在课堂场景生成后由客户端并行调用，为幻灯片生成配套的插图和图表。
+ * 
+ * 运行机理：
+ * 1. 请求头参数：
+ *    - x-image-provider：图像生成提供者ID（默认：'seedream'）
+ *    - x-api-key：提供者API密钥（可选）
+ *    - x-base-url：自定义API端点基础URL（可选）
+ *    - x-image-model：特定的模型ID（可选）
+ * 2. 请求体参数（ImageGenerationOptions）：
+ *    - prompt：图像提示词（必需）
+ *    - negativePrompt：负面提示词（可选）
+ *    - width/height：指定尺寸（可选）
+ *    - aspectRatio：纵横比（可选，例如'16:9'、'1:1'）
+ *    - style：生成风格（可选）
+ * 3. 提供者配置：
+ *    - resolveImageApiKey() 从环境变量或客户端参数获取API密钥
+ *    - 某些提供者需要API密钥，某些可能免费
+ * 4. 尺寸处理：
+ *    - 如果指定了纵横比但未指定宽高，调用 aspectRatioToDimensions() 转换
+ * 5. SSRF防护：
+ *    - 如果提供了自定义baseUrl，在生产环境进行SSRF检查
+ * 6. 图像生成：
+ *    - 调用 generateImage() 执行实际的图像生成
+ *    - 返回生成的图像（URL或base64编码）
+ * 
+ * 与其他代码的关联：
+ * - generateImage (lib/media/image-providers)：执行图像生成的核心逻辑
+ * - IMAGE_PROVIDERS (lib/media/image-providers)：定义支持的图像生成提供者
+ * - resolveImageApiKey (lib/server/provider-config)：获取图像提供者配置
+ * - 课堂生成管道：在生成场景后调用此API获取插图
+ * - 环境变量：OPENAI_API_KEY（DALL-E）、FLUX_API_KEY等
+ */
+
+/**
  * Image Generation API
  *
  * Generates an image from a text prompt using the specified provider.

@@ -1,3 +1,35 @@
+/**
+ * app/api/generate-classroom/route.ts
+ * 
+ * 文件作用：
+ * 处理课堂生成任务的HTTP POST端点。接收用户输入（学习需求、PDF内容、配置参数），
+ * 创建异步生成任务，并返回任务ID供客户端轮询查询进度。
+ * 
+ * 运行机理：
+ * 1. 请求接收：
+ *    - 解析请求体中的 GenerateClassroomInput（学习需求、PDF内容、生成选项等）
+ *    - 验证必填字段（requirement）
+ * 2. 任务创建与启动：
+ *    - 生成唯一的jobId（使用nanoid）
+ *    - 调用 createClassroomGenerationJob() 在存储中创建任务记录
+ *    - 使用 after() 回调在响应发送后异步启动实际的生成任务 runClassroomGenerationJob()
+ * 3. 返回状态：
+ *    - 立即返回202 Accepted状态
+ *    - 返回jobId、pollUrl（客户端轮询地址）、pollIntervalMs（建议轮询间隔）
+ * 4. 生成流程（在后台异步运行）：
+ *    - 解析PDF和需求
+ *    - 生成课堂大纲
+ *    - 生成各个场景（幻灯片、测验、交互式内容等）
+ *    - 生成媒体（图片、视频、TTS音频）
+ * 
+ * 与其他代码的关联：
+ * - GenerateClassroomInput (lib/types/generation)：请求数据结构定义
+ * - createClassroomGenerationJob (lib/server/classroom-job-store)：在存储中创建任务
+ * - runClassroomGenerationJob (lib/server/classroom-job-runner)：执行实际的生成任务
+ * - /api/generate-classroom/[jobId]：客户端轮询此端点查询任务进度
+ * - /api/generate/* 系列API：生成中使用的各个生成子任务（大纲、场景、媒体等）
+ */
+
 import { after, type NextRequest } from 'next/server';
 import { nanoid } from 'nanoid';
 import { apiError, apiSuccess } from '@/lib/server/api-response';

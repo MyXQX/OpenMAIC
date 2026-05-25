@@ -1,4 +1,41 @@
 /**
+ * lib/store/settings.ts
+ * 
+ * 文件作用：
+ * 使用Zustand创建的全局设置状态管理，持久化到localStorage。管理所有AI提供者配置、
+ * 媒体生成配置、音频配置等用户设置。
+ * 
+ * 运行机理：
+ * 1. 状态结构：
+ *    - providerId/modelId：选择的LLM提供者和模型（OpenAI、Claude等）
+ *    - providersConfig：各提供者的详细配置（API密钥、可用模型列表等）
+ *    - imageSetting/videoSetting/ttsSetting：媒体生成设置
+ *    - asrSetting/webSearchSetting：语音识别和网络搜索设置
+ *    - thinkingConfigs：各模型的思考配置（如果支持的话）
+ *    - playbackSpeed：回放速度设置
+ * 2. 持久化：
+ *    - 通过 zustand/middleware 的 persist 中间件自动同步到localStorage
+ *    - localStorage key: 'settings-storage'
+ * 3. 配置验证：
+ *    - pruneThinkingConfigs()：清理不支持的思考配置
+ *    - validateProvider()：验证提供者配置有效性
+ *    - resolveSelectedModel()：解析选择的模型
+ * 4. 支持的提供者类型：
+ *    - LLM：OpenAI、Claude、Google、Alibaba等
+ *    - 图像生成：DALL-E、Flux等
+ *    - 视频生成：HailuoAI等
+ *    - TTS：Azure、OpenAI、VoxCPM等
+ *    - ASR：浏览器内置、OpenAI Whisper等
+ *    - 网络搜索：Brave、Bing、百度等
+ * 
+ * 与其他代码的关联：
+ * - 在整个应用中通过 useSettingsStore() hook 访问设置
+ * - app/page.tsx 使用它读取已配置的LLM提供者
+ * - SettingsDialog 组件允许用户编辑这些设置
+ * - 各个生成API使用这些配置初始化模型
+ */
+
+/**
  * Settings Store
  * Global settings state synchronized with localStorage
  */
