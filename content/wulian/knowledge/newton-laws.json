@@ -1,0 +1,38 @@
+{
+  "chapterId": "newton-laws",
+  "chunks": [
+    {
+      "id": "newton-laws-01-second-law-0",
+      "docId": "builtin:newton-laws",
+      "index": 0,
+      "text": "# 表述\n在惯性系中，质点所受合外力等于其质量与加速度的乘积，方向与合外力相同：\n$$ \\sum \\vec F = m \\vec a $$\n\n它有几个等价表述：\n\n- 微分形式：$\\sum \\vec F = \\dfrac{d(m\\vec v)}{dt}$。当质量 $m$ 不变时退化为 $m\\vec a$。\n- 分量形式：$\\sum F_x = m a_x$，$\\sum F_y = m a_y$（在选定的坐标系内）。",
+      "metadata": {
+        "heading": "表述",
+        "source": "01-second-law.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "newton-laws-01-second-law-1",
+      "docId": "builtin:newton-laws",
+      "index": 1,
+      "text": "# 受力分析的标准步骤\n1. 选择研究对象（质点或刚体），把它单独画出。\n2. 列出与之直接接触或非接触的所有力：重力、支持力、张力、摩擦力、弹力、电磁力等。\n3. 选择适合该问题的坐标系（斜面问题常常以斜面方向为 $x$ 轴）。\n4. 把每个力分解到坐标轴上，写出 $\\sum F_x = m a_x$ 等方程。\n5. 解出未知量并核验单位、量级与方向。",
+      "metadata": {
+        "heading": "受力分析的标准步骤",
+        "source": "01-second-law.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "newton-laws-01-second-law-2",
+      "docId": "builtin:newton-laws",
+      "index": 2,
+      "text": "# 学生易错点\n- **混淆质量与重量**：质量是惯性的度量，重量是地球对其引力，单位分别是 kg 和 N。\n- **未考虑约束反力**：物体放在斜面上，垂直于斜面方向的合力等于支持力分量，必须列入方程。\n- **在加速参考系直接套用 $F=ma$**：在非惯性系需要引入惯性力 $-m\\vec a_0$。",
+      "metadata": {
+        "heading": "学生易错点",
+        "source": "01-second-law.md"
+      },
+      "embedding": null
+    }
+  ]
+}

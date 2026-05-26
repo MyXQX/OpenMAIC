@@ -1,0 +1,39 @@
+{
+  "id": "newton-laws",
+  "title": "牛顿第二定律与受力分析",
+  "subject": "力学",
+  "primaryScientist": "newton",
+  "summary": "通过受力分析、自由体图与坐标系选择，掌握 F = ma 在不同情境下的应用。",
+  "objectives": [
+    "理解力是改变运动状态的原因",
+    "熟练绘制自由体图",
+    "掌握斜面、连体、张力等典型问题"
+  ],
+  "corpusFolder": "newton-laws",
+  "status": "preview",
+  "openingScript": "我经常说，物理的门槛不在于公式，而在于先把『有几个力』数清楚。让我们从一个滑块开始。",
+  "knowledgePoints": [
+    {
+      "id": "f-equals-ma",
+      "title": "牛顿第二定律 F = ma",
+      "scientists": ["newton"],
+      "prerequisites": ["惯性参考系", "矢量加法"],
+      "formulas": [
+        {
+          "latex": "\\sum \\vec F = m \\vec a",
+          "caption": "牛顿第二定律（惯性系）",
+          "variables": [
+            { "symbol": "\\vec F", "meaning": "合外力", "unit": "N" },
+            { "symbol": "m", "meaning": "质量", "unit": "kg" },
+            { "symbol": "\\vec a", "meaning": "加速度", "unit": "m/s^2" }
+          ]
+        }
+      ],
+      "misconceptions": [
+        "把质量与重量混淆",
+        "在非惯性系直接套用 F=ma 而不引入惯性力",
+        "忽略合外力的矢量性"
+      ]
+    }
+  ]
+}

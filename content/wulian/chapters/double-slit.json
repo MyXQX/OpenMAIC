@@ -1,0 +1,40 @@
+{
+  "id": "double-slit",
+  "title": "双缝干涉与光的波动性",
+  "subject": "光学",
+  "primaryScientist": "huygens",
+  "secondaryScientist": "maxwell",
+  "summary": "从惠更斯次波叠加的视角，理解杨氏双缝实验的条纹间距与对比度。",
+  "objectives": [
+    "理解相干光的条件",
+    "掌握条纹间距 Δy = λL/d",
+    "理解光强与振幅的关系"
+  ],
+  "corpusFolder": "double-slit",
+  "status": "preview",
+  "openingScript": "想象两块石头同时落进平静的水面，会有什么图案？光也一样——只要两束次波相干叠加，我们就能看到亮暗相间的条纹。",
+  "knowledgePoints": [
+    {
+      "id": "fringe-spacing",
+      "title": "双缝条纹间距",
+      "scientists": ["huygens"],
+      "prerequisites": ["惠更斯原理", "相干光"],
+      "formulas": [
+        {
+          "latex": "\\Delta y = \\frac{\\lambda L}{d}",
+          "caption": "相邻亮纹间距",
+          "variables": [
+            { "symbol": "\\lambda", "meaning": "光波长", "unit": "m" },
+            { "symbol": "L", "meaning": "屏到双缝距离", "unit": "m" },
+            { "symbol": "d", "meaning": "双缝间距", "unit": "m" }
+          ]
+        }
+      ],
+      "misconceptions": [
+        "认为光强叠加而非振幅叠加",
+        "忽略相干光的条件",
+        "把条纹宽度等同于光斑宽度"
+      ]
+    }
+  ]
+}

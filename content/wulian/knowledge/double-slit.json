@@ -1,0 +1,38 @@
+{
+  "chapterId": "double-slit",
+  "chunks": [
+    {
+      "id": "double-slit-01-fringes-0",
+      "docId": "builtin:double-slit",
+      "index": 0,
+      "text": "# 条件\n干涉发生需要两束光满足：\n\n1. **频率相同**；\n2. **位相差恒定**；\n3. **振动方向有共同分量**。\n\n只有同一光源经分波前/分振幅得到的两束光才容易满足这些条件。",
+      "metadata": {
+        "heading": "条件",
+        "source": "01-fringes.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "double-slit-01-fringes-1",
+      "docId": "builtin:double-slit",
+      "index": 1,
+      "text": "# 条纹间距公式\n设双缝间距为 $d$，屏与双缝的距离为 $L$（满足 $L \\gg d$），单色光波长 $\\lambda$，相邻亮条纹间距为\n$$ \\Delta y = \\frac{\\lambda L}{d}. $$\n\n由此可见：\n\n- 波长越长，条纹越疏；\n- 缝距越大，条纹越密；\n- 屏与缝的距离越远，条纹越疏。",
+      "metadata": {
+        "heading": "条纹间距公式",
+        "source": "01-fringes.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "double-slit-01-fringes-2",
+      "docId": "builtin:double-slit",
+      "index": 2,
+      "text": "# 强度分布\n考虑两束等幅相干光的振幅叠加，屏上某点的合振幅为 $A = 2A_0 \\cos(\\delta/2)$，对应光强 $I = 4 I_0 \\cos^2(\\delta/2)$，其中 $\\delta = 2\\pi d \\sin\\theta / \\lambda$ 为光程差对应的相位差。亮纹中心 $\\delta = 2k\\pi$，暗纹中心 $\\delta = (2k+1)\\pi$。",
+      "metadata": {
+        "heading": "强度分布",
+        "source": "01-fringes.md"
+      },
+      "embedding": null
+    }
+  ]
+}

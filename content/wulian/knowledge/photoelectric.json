@@ -1,0 +1,38 @@
+{
+  "chapterId": "photoelectric",
+  "chunks": [
+    {
+      "id": "photoelectric-01-photoelectric-0",
+      "docId": "builtin:photoelectric",
+      "index": 0,
+      "text": "# 光电效应基础\n光电效应指的是金属在受到光照后释放电子的现象。1887 年赫兹首次观察到，1905 年爱因斯坦用光量子假说给出了完整解释。",
+      "metadata": {
+        "heading": "光电效应基础",
+        "source": "01-photoelectric.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "photoelectric-01-photoelectric-1",
+      "docId": "builtin:photoelectric",
+      "index": 1,
+      "text": "# 关键实验事实\n1. 存在**阈值频率** $\\nu_0$：当照射光频率低于 $\\nu_0$ 时，无论光强多大、照射多久，都没有光电子。\n2. **瞬时性**：只要 $\\nu > \\nu_0$，光电子在照射的瞬间（约 $10^{-9}$ s）就被释放。\n3. **饱和电流**：相同频率下，光强越大，单位时间内释放的光电子越多，但光电子的最大动能与光强无关。\n4. **最大动能由频率决定**：$E_k = h\\nu - W$，其中 $W$ 是逸出功。\n\n经典波动理论无法解释 (1) 和 (4)：连续波照射理应给电子积累任意大的能量。",
+      "metadata": {
+        "heading": "关键实验事实",
+        "source": "01-photoelectric.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "photoelectric-01-photoelectric-2",
+      "docId": "builtin:photoelectric",
+      "index": 2,
+      "text": "# 爱因斯坦光电方程\n$$ h\\nu = W + \\tfrac12 m v_{\\max}^2 $$\n\n它本质上是能量守恒：一份光量子（光子）能量 $h\\nu$ 进入金属，扣除逸出功 $W$，剩下的转化为光电子动能。",
+      "metadata": {
+        "heading": "爱因斯坦光电方程",
+        "source": "01-photoelectric.md"
+      },
+      "embedding": null
+    }
+  ]
+}

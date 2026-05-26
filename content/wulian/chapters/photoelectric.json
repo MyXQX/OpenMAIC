@@ -1,0 +1,40 @@
+{
+  "id": "photoelectric",
+  "title": "光电效应与光量子假说",
+  "subject": "近代物理",
+  "primaryScientist": "einstein",
+  "secondaryScientist": "bohr",
+  "summary": "用爱因斯坦的光量子假说解释光电效应的『阈值频率』『瞬时性』『饱和电流』。",
+  "objectives": [
+    "理解光电效应的实验事实",
+    "掌握 hν = W + eU 的物理含义",
+    "理解为何经典波动理论无法解释光电效应"
+  ],
+  "corpusFolder": "photoelectric",
+  "status": "preview",
+  "openingScript": "假如光是连续的波，给金属足够长的照射时间，电子总该获得足够能量逃出去——可实验告诉我们不是这样。让我们看看出了什么问题。",
+  "knowledgePoints": [
+    {
+      "id": "einstein-equation",
+      "title": "爱因斯坦光电方程",
+      "scientists": ["einstein"],
+      "prerequisites": ["普朗克能量子 E=hν", "金属逸出功"],
+      "formulas": [
+        {
+          "latex": "h\\nu = W + \\tfrac{1}{2} m v_{\\max}^2",
+          "caption": "光电方程（能量守恒）",
+          "variables": [
+            { "symbol": "h\\nu", "meaning": "光子能量", "unit": "J" },
+            { "symbol": "W", "meaning": "金属逸出功", "unit": "J" },
+            { "symbol": "v_{\\max}", "meaning": "光电子最大速度", "unit": "m/s" }
+          ]
+        }
+      ],
+      "misconceptions": [
+        "认为光强越大光电子动能越大",
+        "认为存在阈值时间，长时间照射就能产生光电子",
+        "忽略与频率的关系"
+      ]
+    }
+  ]
+}

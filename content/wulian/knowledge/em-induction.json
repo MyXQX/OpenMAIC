@@ -1,0 +1,159 @@
+{
+  "chapterId": "em-induction",
+  "chunks": [
+    {
+      "id": "em-induction-01-history-and-experiments-0",
+      "docId": "builtin:em-induction",
+      "index": 0,
+      "text": "# 奥斯特实验与场的概念\n1820 年，奥斯特发现通电导线附近的磁针会偏转，第一次揭示了电与磁之间的关联。这一现象激发了同时代实验家们的反向追问：既然电流可以产生磁场，那么磁场是否也能产生电流？\n\n法拉第从 1822 年起反复尝试用静止的强磁场让线圈中产生电流，结果始终为零。直到 1831 年 8 月 29 日，他在皇家研究院的实验室里使用一个铁环，把两组线圈缠在铁环上：当主线圈接通或断开瞬间，副线圈的电流计指针出现了短暂的偏转。法拉第由此意识到——产生感应电流的不是稳定的磁场，而是磁场的变化。",
+      "metadata": {
+        "heading": "奥斯特实验与场的概念",
+        "source": "01-history-and-experiments.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-01-history-and-experiments-1",
+      "docId": "builtin:em-induction",
+      "index": 1,
+      "text": "# 法拉第的关键观察\n法拉第在 1831 年随后几个月内反复做了几组对照实验，其结论可总结为以下要点：\n\n1. **变化是核心**：当磁通量随时间变化时，闭合回路中才会出现感应电流。\n2. **方向与变化趋势相反**：感应电流产生的磁场总是趋向于反抗原通量的变化。\n3. **变化率决定大小**：变化越快，感应电动势越大。\n4. **来源不限**：磁场强度变化、回路面积变化、磁场与回路之间的相对运动，都能引起磁通量变化。\n\n法拉第用实验语言而非数学语言记录这些观察，他常说：「让我们看看会发生什么」。",
+      "metadata": {
+        "heading": "法拉第的关键观察",
+        "source": "01-history-and-experiments.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-01-history-and-experiments-2",
+      "docId": "builtin:em-induction",
+      "index": 2,
+      "text": "# 楞次定律的提出\n1834 年，俄国物理学家楞次系统总结了感应电流方向规则：感应电流的方向总是使其磁场反抗引起感应电流的磁通量变化。这条规则等价于能量守恒——若感应电流的方向使原变化进一步加快，能量将凭空增加。\n\n楞次定律帮助我们在不计算的情况下迅速判断方向：当外磁场穿过回路的通量增大时，感应电流产生的磁场方向与外磁场相反；通量减小时，则与外磁场同向。",
+      "metadata": {
+        "heading": "楞次定律的提出",
+        "source": "01-history-and-experiments.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-02-magnetic-flux-0",
+      "docId": "builtin:em-induction",
+      "index": 3,
+      "text": "# 定义\n通过曲面 S 的磁通量定义为\n$$ \\Phi_B = \\int_S \\vec B \\cdot d\\vec A $$\n其中 $\\vec B$ 是磁感应强度，$d\\vec A$ 是面元矢量，方向沿曲面单位法线。SI 单位为韦伯（Wb），$1\\,\\text{Wb} = 1\\,\\text{T}\\cdot\\text{m}^2$。\n\n对于均匀磁场穿过平面回路：\n$$ \\Phi_B = B A \\cos\\theta $$\n其中 $\\theta$ 是磁场方向与回路法线的夹角。",
+      "metadata": {
+        "heading": "定义",
+        "source": "02-magnetic-flux.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-02-magnetic-flux-1",
+      "docId": "builtin:em-induction",
+      "index": 4,
+      "text": "# 三个变化来源\n磁通量随时间变化可由三类原因引起：\n\n1. **磁场强度变化** $dB/dt \\neq 0$：例如电磁铁的电流变化。\n2. **面积变化** $dA/dt \\neq 0$：例如导线框被拉伸或压缩。\n3. **方向变化** $d\\theta/dt \\neq 0$：例如线圈在磁场中转动（发电机原理）。\n\n学生常见误区是只看磁场是否大、忽视通量是否变。比如稳恒强磁场穿过静止线圈，感应电动势为零，因为磁通量不变。",
+      "metadata": {
+        "heading": "三个变化来源",
+        "source": "02-magnetic-flux.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-02-magnetic-flux-2",
+      "docId": "builtin:em-induction",
+      "index": 5,
+      "text": "# 计算示例\n设半径 $r=0.05\\,\\text{m}$ 的圆形线圈位于均匀磁场 $B=0.4\\,\\text{T}$ 中，回路法线与磁场夹角 $\\theta=60°$。则磁通量为\n$$ \\Phi_B = B \\pi r^2 \\cos 60° = 0.4 \\times \\pi \\times 0.0025 \\times 0.5 \\approx 1.57 \\times 10^{-3}\\,\\text{Wb}. $$\n\n若线圈以 $\\omega=10\\,\\text{rad/s}$ 匀速转动，$\\theta(t) = \\omega t$，则瞬时通量为\n$$ \\Phi_B(t) = B \\pi r^2 \\cos(\\omega t). $$",
+      "metadata": {
+        "heading": "计算示例",
+        "source": "02-magnetic-flux.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-03-faraday-law-0",
+      "docId": "builtin:em-induction",
+      "index": 6,
+      "text": "# 公式\n法拉第电磁感应定律的标准形式为\n$$ \\varepsilon = -\\frac{d\\Phi_B}{dt} $$\n其中 $\\varepsilon$ 是感应电动势（V），$\\Phi_B$ 是穿过闭合回路的磁通量（Wb），$t$ 是时间。\n\n负号体现的是楞次定律所描述的方向：感应电动势的方向总是与磁通量变化方向相反。\n\n对于 N 匝线圈：\n$$ \\varepsilon = -N\\frac{d\\Phi_B}{dt} $$\n因为每一匝都贡献相同的感应电动势，串联叠加。",
+      "metadata": {
+        "heading": "公式",
+        "source": "03-faraday-law.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-03-faraday-law-1",
+      "docId": "builtin:em-induction",
+      "index": 7,
+      "text": "# 微分形式（麦克斯韦方程）\n把法拉第定律推广到任意一点的电场，得到麦克斯韦方程组中的法拉第—麦克斯韦方程：\n$$ \\nabla \\times \\vec E = -\\frac{\\partial \\vec B}{\\partial t} $$\n即变化的磁场会感应出有旋的电场。这个有旋电场即使在无源、无电荷的空间中也可以存在，是电磁波传播的基础。",
+      "metadata": {
+        "heading": "微分形式（麦克斯韦方程）",
+        "source": "03-faraday-law.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-03-faraday-law-2",
+      "docId": "builtin:em-induction",
+      "index": 8,
+      "text": "# 动生与感生\n按变化来源不同，感应电动势可分为：\n\n- **动生电动势**：导体在磁场中运动引起。来源于洛伦兹力对载流子的作用 $\\vec F = q\\vec v \\times \\vec B$。在长度为 $L$ 的直导线以速度 $\\vec v$ 在磁场 $\\vec B$ 中切割磁感线时，\n  $$ \\varepsilon = \\int (\\vec v \\times \\vec B) \\cdot d\\vec l. $$\n- **感生电动势**：磁场本身随时间变化引起。来源于变化磁场感生的非保守电场 $\\vec E$。\n\n两者在数学上都满足 $\\varepsilon = -d\\Phi_B/dt$，但物理机制不同。",
+      "metadata": {
+        "heading": "动生与感生",
+        "source": "03-faraday-law.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-03-faraday-law-3",
+      "docId": "builtin:em-induction",
+      "index": 9,
+      "text": "# 经典例题：磁通量变化与电动势\n设磁场穿过半径 $r$ 的圆形线圈方向沿轴向，磁感应强度按 $B(t) = B_0 + kt$ 线性增长。则：\n$$ \\Phi_B(t) = (B_0 + kt) \\pi r^2, \\quad \\varepsilon = -\\frac{d\\Phi_B}{dt} = -k \\pi r^2. $$\n负号表示感应电动势的方向反抗磁场增大；电流方向由楞次定律判定。",
+      "metadata": {
+        "heading": "经典例题：磁通量变化与电动势",
+        "source": "03-faraday-law.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-04-lenz-law-and-misconceptions-0",
+      "docId": "builtin:em-induction",
+      "index": 10,
+      "text": "# 三步法判断感应电流方向\n楞次定律的实用步骤：\n\n1. 判断**磁通量变化**是增大还是减小。需要同时考虑磁场强度和方向、回路面积、夹角三个因素。\n2. 确定**感应磁场**应当指向何方以反抗这一变化：通量增大时，感应磁场反向；通量减小时，感应磁场同向。\n3. 用**右手螺旋定则**确定回路中电流方向：四指从感应磁场的回路指向卷曲，拇指指向感应磁场轴向。\n\n举例：磁铁 N 极向下插入水平线圈，线圈感受到通量增大且方向向下；感应电流应在线圈上方产生向上的磁场以反抗通量增加；右手螺旋定则得到电流方向沿俯视图为逆时针。",
+      "metadata": {
+        "heading": "三步法判断感应电流方向",
+        "source": "04-lenz-law-and-misconceptions.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-04-lenz-law-and-misconceptions-1",
+      "docId": "builtin:em-induction",
+      "index": 11,
+      "text": "# 楞次定律与能量守恒\n楞次定律的另一种表述是能量守恒：感应电流必须以「反抗原变化」的方向出现，否则任何微小扰动都会被放大，违反热力学第二定律。在拉动磁铁的过程中，外力对磁铁做的功转化为线圈中焦耳热，正是因为感应电流的反抗作用。",
+      "metadata": {
+        "heading": "楞次定律与能量守恒",
+        "source": "04-lenz-law-and-misconceptions.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-04-lenz-law-and-misconceptions-2",
+      "docId": "builtin:em-induction",
+      "index": 12,
+      "text": "# 学生常见误解纠正\n1. **「磁场越强，感应电流越大」**。错。决定感应电动势的不是 $B$，而是 $d\\Phi_B/dt$。强磁场若不变化，感应电动势仍为零。\n2. **「感应电流方向就是与磁场反向」**。错。楞次定律说的是反抗**变化**而非反抗**磁场**。当磁通减小时，感应磁场反而与原磁场同向。\n3. **「面积不变时一定没有感应电动势」**。错。面积不变但磁场或方向变化也会产生感应电动势。\n4. **「先有电场才有电流」**。在感生电动势情形中，变化磁场直接产生有旋电场，不依赖电荷分布。\n5. **「负号是数学装饰，不必在意」**。错。负号编码方向信息；解题时通常先用楞次定律定方向，再用 $|\\varepsilon|$ 算大小，最后再核对一致。",
+      "metadata": {
+        "heading": "学生常见误解纠正",
+        "source": "04-lenz-law-and-misconceptions.md"
+      },
+      "embedding": null
+    },
+    {
+      "id": "em-induction-04-lenz-law-and-misconceptions-3",
+      "docId": "builtin:em-induction",
+      "index": 13,
+      "text": "# 经典演示：单匝矩形线圈在均匀磁场中匀速转动\n设矩形线圈面积 $S$，绕中心轴以角速度 $\\omega$ 在磁场 $B$ 中转动，初始法线与 $\\vec B$ 重合。则：\n$$ \\Phi_B(t) = BS \\cos\\omega t,\\quad \\varepsilon(t) = BS\\omega \\sin\\omega t. $$\n这就是简谐交流电的来源，工业发电机的原理。",
+      "metadata": {
+        "heading": "经典演示：单匝矩形线圈在均匀磁场中匀速转动",
+        "source": "04-lenz-law-and-misconceptions.md"
+      },
+      "embedding": null
+    }
+  ]
+}

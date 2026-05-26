@@ -1,0 +1,83 @@
+{
+  "id": "em-induction",
+  "title": "电磁感应与楞次定律",
+  "subject": "电磁学",
+  "primaryScientist": "faraday",
+  "secondaryScientist": "maxwell",
+  "summary": "从法拉第的实验出发，理解磁通量、感应电动势与楞次定律，并用麦克斯韦方程组的视角统一表达。",
+  "objectives": [
+    "理解磁通量的定义与适用条件",
+    "掌握法拉第电磁感应定律 ε = -dΦ/dt 的物理含义",
+    "用楞次定律快速判断感应电流方向",
+    "区分动生与感生电动势的来源"
+  ],
+  "corpusFolder": "em-induction",
+  "status": "ready",
+  "openingScript": "欢迎来到皇家研究院。今天我们要谈一件 1831 年让我兴奋了好几个月的事——为什么把磁铁插入一个静止的线圈，电流计的指针会突然颤动？让我们慢慢看。",
+  "knowledgePoints": [
+    {
+      "id": "magnetic-flux",
+      "title": "磁通量",
+      "scientists": ["faraday", "maxwell"],
+      "prerequisites": ["磁场 B", "矢量面积 dA"],
+      "formulas": [
+        {
+          "latex": "\\Phi_B = \\int_S \\vec B \\cdot d\\vec A",
+          "caption": "穿过曲面 S 的磁通量",
+          "variables": [
+            { "symbol": "\\Phi_B", "meaning": "磁通量", "unit": "Wb" },
+            { "symbol": "\\vec B", "meaning": "磁感应强度", "unit": "T" },
+            { "symbol": "d\\vec A", "meaning": "面元矢量，方向沿曲面法线" }
+          ]
+        }
+      ],
+      "misconceptions": [
+        "把磁通量等同于磁场强度",
+        "忽略 B 与法线之间的夹角",
+        "面积变化时仍认为通量不变"
+      ],
+      "simulationId": "flux-loop-slider"
+    },
+    {
+      "id": "faraday-law",
+      "title": "法拉第电磁感应定律",
+      "scientists": ["faraday"],
+      "prerequisites": ["magnetic-flux"],
+      "formulas": [
+        {
+          "latex": "\\varepsilon = -\\frac{d\\Phi_B}{dt}",
+          "caption": "感应电动势",
+          "variables": [
+            { "symbol": "\\varepsilon", "meaning": "感应电动势", "unit": "V" },
+            { "symbol": "\\Phi_B", "meaning": "磁通量", "unit": "Wb" },
+            { "symbol": "t", "meaning": "时间", "unit": "s" }
+          ]
+        }
+      ],
+      "misconceptions": [
+        "认为只要磁场存在就有感应电动势",
+        "忽略负号的物理意义（楞次方向）",
+        "把变化率误当成绝对量"
+      ],
+      "simulationId": "flux-loop-slider"
+    },
+    {
+      "id": "lenz-law",
+      "title": "楞次定律",
+      "scientists": ["faraday"],
+      "prerequisites": ["faraday-law"],
+      "formulas": [
+        {
+          "latex": "I_{\\text{ind}} \\text{ 方向使其产生的磁场反抗 } \\Phi_B \\text{ 的变化}",
+          "caption": "楞次定律的方向规则"
+        }
+      ],
+      "misconceptions": [
+        "认为感应电流总是与原磁场方向相反",
+        "忽略『反抗变化』和『反抗磁场』的差别",
+        "把楞次定律视为额外定律而非能量守恒推论"
+      ],
+      "simulationId": "flux-loop-slider"
+    }
+  ]
+}
