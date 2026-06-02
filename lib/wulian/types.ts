@@ -4,6 +4,9 @@
  * 整个系统所有跨模块共享的类型都集中在这里，避免循环依赖。
  */
 
+// 复用 MAIC 课堂内核的结构类型（仅类型导入，无运行时依赖）
+import type { Stage, Scene } from '@/lib/types/stage';
+
 // ----------------------------------------------------------------------------
 // 科学家与角色
 // ----------------------------------------------------------------------------
@@ -212,6 +215,8 @@ export interface ChatRequestBody {
   mode?: 'course' | 'mine' | 'compare';
   /** 强制让某位 agent 发言。默认按状态机选择。 */
   forceAgent?: AgentRole;
+  /** 关联的定制课堂实例 ID，使讨论挂到具体实例上下文（重构新增） */
+  classroomId?: string;
 }
 
 // ----------------------------------------------------------------------------
@@ -225,4 +230,105 @@ export interface FeedbackEntry {
   type: 'quiz' | 'rating' | 'comment';
   payload: Record<string, unknown>;
   createdAt: number;
+}
+
+// ----------------------------------------------------------------------------
+// 重构新增：个性化、定制课堂实例、模拟器、账号、生成任务
+// （详见 design.md §4.1）
+// ----------------------------------------------------------------------------
+
+/** 学生画像（个性化输入的基线） */
+export interface StudentProfile {
+  userId: string;
+  /** 年级/专业 */
+  gradeOrMajor?: string;
+  /** 物理基础水平 */
+  level: 'beginner' | 'intermediate' | 'advanced';
+  /** 学习目标 */
+  goals: ('exam' | 'interest' | 'research')[];
+  /** 偏好节奏 */
+  pacePreference?: 'slow' | 'normal' | 'fast';
+  /** 偏好讲解风格 */
+  preferredScientistTone?: string;
+  updatedAt: number;
+}
+
+/** 个性化定制输入（向导汇总） */
+export interface WulianPersonalizationInput {
+  chapterId: string;
+  studentProfile: StudentProfile;
+  /** 资料模式：仅课程内置 / 仅我的上传 / 二者对照 */
+  materialMode: 'course' | 'mine' | 'compare';
+  /** 选中的私有上传文档 ID */
+  uploadedDocIds: string[];
+  /** 选中要嵌入课件的模拟器 ID */
+  selectedSimulatorIds: string[];
+  /** 额外的自定义指令 */
+  extraInstructions?: string;
+}
+
+/**
+ * 定制课堂实例（持久化）——在 MAIC `PersistedClassroomData` 之上扩展。
+ * 复用 MAIC 的 `Stage + Scene[]` 结构，附 wulian 元数据。
+ */
+export interface WulianClassroomInstance {
+  id: string;
+  /** userId（访客时为本地匿名 id） */
+  owner: string;
+  chapterId: string;
+  /** 复用 MAIC lib/types/stage */
+  stage: Stage;
+  /** 复用 MAIC lib/types/stage */
+  scenes: Scene[];
+  personalization: WulianPersonalizationInput;
+  /** 已嵌入的模拟器 id */
+  simulators: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** 模拟器可调参数定义 */
+export interface SimulatorParam {
+  key: string;
+  label: string;
+  min: number;
+  max: number;
+  default: number;
+  unit?: string;
+}
+
+/** 模拟器注册项（场景化） */
+export interface SimulatorDefinition {
+  /** 'flux-loop-slider' 等 */
+  id: string;
+  title: string;
+  subject: Chapter['subject'];
+  /** 关联知识点提示 */
+  knowledgePointHint?: string;
+  params: SimulatorParam[];
+}
+
+/** 账号 */
+export interface UserAccount {
+  id: string;
+  username: string;
+  /** scrypt/bcrypt 加盐哈希，绝不明文 */
+  passwordHash: string;
+  salt: string;
+  createdAt: number;
+}
+
+/** 课堂生成任务（轮询） */
+export interface WulianGenerationJob {
+  jobId: string;
+  owner: string;
+  chapterId: string;
+  status: 'queued' | 'running' | 'completed' | 'failed';
+  /** 当前步骤名 */
+  step: string;
+  /** 0..100 百分比 */
+  progress: number;
+  /** 完成后产物实例 id */
+  classroomId?: string;
+  error?: string;
 }
