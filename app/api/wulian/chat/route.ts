@@ -1,33 +1,56 @@
-/**
- * POST /api/wulian/chat
- *
- * 物联智讲 - 多 Agent 课堂主接口（SSE 流）
- *
- * Request body: ChatRequestBody
- * Response: text/event-stream，事件类型见 lib/wulian/types.ts -> WulianStreamEvent
- *
- * 支持 header：
- *   x-model    : 模型字符串，如 "deepseek:deepseek-v4-flash"
- *   x-api-key  : 当用户在前端「设置」里配置时传过来；服务端没有时回退到 .env.local
- *   x-base-url : 自定义网关
- *
- * 学生侧不需要修改任何模型参数 - 默认走 .env.local 的 DEFAULT_MODEL。
- */
-
 import { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
+import { nanoid } from 'nanoid';
 import { isProviderKeyRequired } from '@/lib/ai/providers';
 import { apiError } from '@/lib/server/api-response';
 import { resolveModelFromHeaders } from '@/lib/server/resolve-model';
 import { createLogger } from '@/lib/logger';
-import type { ChatRequestBody, WulianStreamEvent } from '@/lib/wulian/types';
+import type {
+  ChatRequestBody,
+  WulianStreamEvent,
+  WhiteboardItem,
+  AgentRole,
+  ChatMessage,
+} from '@/lib/wulian/types';
 import { getChapter } from '@/lib/wulian/agents/chapter';
 import { getPersona } from '@/lib/wulian/agents/persona';
-import { runClassroomTurn } from '@/lib/wulian/agents/orchestrator';
-import { retrieve } from '@/lib/wulian/rag/store';
+import { retrieveForUser } from '@/lib/wulian/rag/store';
+import { getUserIdFromSessionToken, SESSION_COOKIE_NAME } from '@/lib/wulian/auth/session';
+import { getClassroomInstance } from '@/lib/wulian/storage';
+import { mapWulianAgentsToMaic } from '@/lib/wulian/agents/agent-mapper';
+import { statelessGenerate } from '@/lib/orchestration/stateless-generate';
+import type { StatelessChatRequest } from '@/lib/types/chat';
+import type { UIMessage } from 'ai';
 
 const log = createLogger('Wulian Chat API');
 
 export const maxDuration = 60;
+
+/**
+ * Maps MAIC whiteboard actions to Wulian whiteboard items.
+ */
+function maicActionToWulianWhiteboard(name: string, params: any): WhiteboardItem | null {
+  if (name === 'wb_draw_latex') {
+    return { type: 'formula', latex: String(params.latex || ''), caption: String(params.caption || '') };
+  }
+  if (name === 'wb_draw_text') {
+    return { type: 'note', markdown: String(params.content || params.markdown || '') };
+  }
+  if (name === 'wb_draw_chart' || name === 'wb_draw_shape') {
+    return {
+      type: 'figure',
+      svg: String(params.svg || params.shapeName || ''),
+      caption: String(params.caption || ''),
+    };
+  }
+  if (name === 'wb_draw_code' || name === 'wb_edit_code') {
+    return {
+      type: 'note',
+      markdown: `\`\`\`${params.language || 'code'}\n${params.code || ''}\n\`\`\``,
+    };
+  }
+  return null;
+}
 
 export async function POST(req: NextRequest) {
   const encoder = new TextEncoder();
@@ -48,7 +71,16 @@ export async function POST(req: NextRequest) {
       return apiError('INVALID_REQUEST', 500, `Persona missing: ${chapter.primaryScientist}`);
     }
 
-    // 解析模型
+    const secondaryScientist = chapter.secondaryScientist
+      ? await getPersona(chapter.secondaryScientist)
+      : null;
+
+    // 获取登录状态隔离键
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+    const userId = (await getUserIdFromSessionToken(sessionToken)) || 'guest';
+
+    // 解析模型与鉴权凭据
     let resolved;
     try {
       resolved = await resolveModelFromHeaders(req);
@@ -58,7 +90,7 @@ export async function POST(req: NextRequest) {
         return apiError(
           'MISSING_API_KEY',
           401,
-          '需要配置 API Key。请在项目根的 .env.local 中至少填入一个：DEEPSEEK_API_KEY、QWEN_API_KEY、OPENAI_API_KEY、GLM_API_KEY 等，并设置 DEFAULT_MODEL（如 deepseek:deepseek-v4-flash）。',
+          '需要配置 API Key。请在项目根的 .env.local 中填入 DEEPSEEK_API_KEY 或 QWEN_API_KEY 等。',
         );
       }
       throw err;
@@ -71,9 +103,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 检索资料：用最近的用户消息（或开场前的"导入提示"）作为 query
-    const queryForRetrieval = body.userMessage?.trim() || `${chapter.title} ${chapter.objectives.join(' ')}`;
-    const retrieved = await retrieve({
+    // 检索资料（已升级为按用户隔离检索，需求 2.3）
+    const queryForRetrieval =
+      body.userMessage?.trim() || `${chapter.title} ${chapter.objectives.join(' ')}`;
+    const retrieved = await retrieveForUser({
+      userId,
       chapterId: chapter.id,
       query: queryForRetrieval,
       uploadedDocIds: body.uploadedDocIds,
@@ -82,8 +116,85 @@ export async function POST(req: NextRequest) {
     });
 
     log.info(
-      `chapter=${chapter.id} mode=${body.mode ?? 'course'} retrieved=${retrieved.length} model=${resolved.modelString}`,
+      `[Chat] chapter=${chapter.id} user=${userId} mode=${body.mode ?? 'course'} retrieved=${retrieved.length} model=${resolved.modelString}`,
     );
+
+    // 载入定制课堂实例，重建 storeState 信息
+    let storeState = {
+      stage: {
+        id: 'temp-stage',
+        name: chapter.title,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      } as any,
+      scenes: [] as any[],
+      currentSceneId: null as string | null,
+      mode: 'playback' as const,
+      whiteboardOpen: false,
+    };
+
+    if (body.classroomId && userId !== 'guest') {
+      try {
+        const instance = await getClassroomInstance(userId, body.classroomId);
+        if (instance) {
+          storeState = {
+            stage: instance.stage,
+            scenes: instance.scenes,
+            currentSceneId: instance.scenes[0]?.id || null,
+            mode: 'playback',
+            whiteboardOpen: false,
+          };
+        }
+      } catch (err) {
+        log.warn(`Failed to preload classroom instance ${body.classroomId} for chat RAG context:`, err);
+      }
+    }
+
+    // 映射消息历史记录为 standard UIMessages
+    const historyList = body.history || [];
+    const messages: any[] = historyList.map((m) => {
+      const isUser = m.role === 'user';
+      const contentStr = isUser
+        ? (m.content as { speech: string }).speech
+        : (m.content as any).speech;
+      const metadata = isUser
+        ? {}
+        : {
+            agentId: (m.content as any).speakerId,
+            senderName: (m.content as any).speakerName,
+            originalRole: (m.content as any).speakerRole,
+          };
+
+      return {
+        id: m.id || nanoid(),
+        role: isUser ? 'user' : 'assistant',
+        content: contentStr,
+        metadata,
+      };
+    });
+
+    if (body.userMessage) {
+      messages.push({
+        id: nanoid(),
+        role: 'user',
+        content: body.userMessage,
+      });
+    }
+
+    // 构建 LangGraph Orchestration 配置
+    const agentConfigs = mapWulianAgentsToMaic(teacherPersona, secondaryScientist);
+    const triggerAgentId = body.forceAgent || (body.userMessage ? 'assistant' : 'teacher');
+
+    const chatConfig = {
+      agentIds: agentConfigs.map((a) => a.id),
+      agentConfigs,
+      sessionType: 'discussion' as const,
+      discussionTopic: body.userMessage || `${chapter.title}的讲解与互动讨论`,
+      discussionPrompt: retrieved.length > 0
+        ? `参考检索资料：\n${retrieved.map((r, idx) => `[#${idx + 1}] ${r.text}`).join('\n')}`
+        : '请基于你的知识体系和历史角色口吻进行讨论。',
+      triggerAgentId,
+    };
 
     const { readable, writable } = new TransformStream();
     const writer = writable.getWriter();
@@ -97,27 +208,113 @@ export async function POST(req: NextRequest) {
       }
     };
 
-    // 心跳保活（防代理 30s 超时）
+    // 心跳保活
     const heartbeat = setInterval(() => {
       writer.write(encoder.encode(`:heartbeat\n\n`)).catch(() => clearInterval(heartbeat));
     }, 15_000);
 
     (async () => {
       try {
-        for await (const event of runClassroomTurn({
-          chapter,
-          teacherPersona,
-          studentMessage: body!.userMessage ?? '',
-          history: body!.history ?? [],
-          retrieved,
-          mode: body!.mode ?? 'course',
-          forceAgent: body!.forceAgent,
-          languageModel: resolved.model,
-          signal,
-        })) {
+        let currentSpeech = '';
+        let currentAgentId = '';
+        let currentSpeakerRole: AgentRole = 'teacher';
+        let currentSpeakerId = '';
+        let currentSpeakerName = '';
+        let currentWhiteboard: WhiteboardItem[] = [];
+
+        const flushCurrentAgent = async () => {
+          if (currentAgentId) {
+            await send({
+              type: 'agent_complete',
+              turn: {
+                speakerRole: currentSpeakerRole,
+                speakerId: currentSpeakerId,
+                speakerName: currentSpeakerName,
+                speech: currentSpeech || '（正在思考中...）',
+                whiteboard: currentWhiteboard.length > 0 ? currentWhiteboard : undefined,
+                avatarAction: { emotion: 'neutral' },
+                nextState: 'await_student',
+              },
+            });
+            currentSpeech = '';
+            currentWhiteboard = [];
+            currentAgentId = '';
+          }
+        };
+
+        const statelessRequest: StatelessChatRequest = {
+          messages: messages as any,
+          storeState,
+          config: chatConfig as any,
+          apiKey: resolved.apiKey || '',
+          baseUrl: resolved.baseUrl || undefined,
+          model: resolved.modelString,
+        };
+
+        const abortController = new AbortController();
+        signal.addEventListener('abort', () => abortController.abort());
+
+        const generator = statelessGenerate(
+          statelessRequest,
+          abortController.signal,
+          resolved.model,
+          undefined,
+        );
+
+        for await (const event of generator) {
           if (signal.aborted) break;
-          await send(event);
+
+          if (event.type === 'agent_start') {
+            await flushCurrentAgent();
+            currentAgentId = event.data.agentId;
+            currentSpeakerRole =
+              currentAgentId === 'teacher'
+                ? 'teacher'
+                : currentAgentId === 'assistant'
+                  ? 'assistant'
+                  : 'classmate';
+            currentSpeakerId =
+              currentAgentId === 'teacher'
+                ? `teacher_${teacherPersona.id}`
+                : currentAgentId === 'assistant'
+                  ? 'assistant_xiaomai'
+                  : 'classmate_xiaoheng';
+            currentSpeakerName =
+              currentAgentId === 'teacher'
+                ? `${teacherPersona.name} 教授`
+                : currentAgentId === 'assistant'
+                  ? '小麦 助教'
+                  : '小恒 同学';
+
+            await send({
+              type: 'agent_start',
+              speakerRole: currentSpeakerRole,
+              speakerId: currentSpeakerId,
+              speakerName: currentSpeakerName,
+            });
+          } else if (event.type === 'text_delta') {
+            currentSpeech += event.data.content;
+            await send({
+              type: 'agent_delta',
+              speakerId: currentSpeakerId,
+              deltaText: event.data.content,
+            });
+          } else if (event.type === 'action') {
+            const wbItem = maicActionToWulianWhiteboard(event.data.actionName, event.data.params);
+            if (wbItem) {
+              currentWhiteboard.push(wbItem);
+            }
+          } else if (event.type === 'error') {
+            await send({
+              type: 'error',
+              message: event.data.message,
+            });
+          }
         }
+
+        await flushCurrentAgent();
+        await send({ type: 'turn_end' });
+
       } catch (err) {
         log.error('orchestration error:', err);
         await send({

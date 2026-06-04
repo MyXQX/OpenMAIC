@@ -72,24 +72,24 @@
   - 录入现有 4 个模拟器（id/title/subject/参数定义），关联知识点
   - 提供 `GET /api/wulian/simulators` 与 `getSimulator(id)`
   - _需求: 3.1, 3.6_
-- [ ] 4.2 定义模拟器 → MAIC interactive 场景适配协议
+- [x] 4.2 定义模拟器 → MAIC interactive 场景适配协议
 
   - 实现 wulian 模拟器场景 payload 与 MAIC 交互场景渲染容器的稳定映射
   - 渲染失败降级占位逻辑
   - _需求: 3.2, 3.5, 3.6_
-- [ ] 4.3 迁移/包装现有 `Simulation.tsx` 为自包含场景组件
+- [x] 4.3 迁移/包装现有 `Simulation.tsx` 为自包含场景组件
 
   - 保持 4 个模拟器实时调参能力，去除对旧 LessonRoom 的耦合
   - 暴露受控 `params` 接口供 Agent 动作设置
   - _需求: 3.3, 3.4_
-- [ ] 4.4 模拟器场景适配属性测试
+- [x] 4.4 模拟器场景适配属性测试
 
   - PBT：任意合法 `SimulatorDefinition` → 生成的 interactive 场景 payload 可被适配协议解析回等价配置
   - _需求: 3.2, 3.6_
 
 - [ ] 
 
-- [ ] 5.1 升级上传/检索为按用户隔离
+- [x] 5.1 升级上传/检索为按用户隔离
 
   - `POST /api/wulian/ingest` 写入 `users/<userId>/uploads|vectors`（访客写本地由前端处理，服务端按会话隔离）
   - 复用现有 chunk/embed/parse；保留关键词降级

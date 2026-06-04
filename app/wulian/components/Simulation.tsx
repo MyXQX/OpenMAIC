@@ -49,6 +49,18 @@ function FluxLoopSlider({ initial }: { initial?: Record<string, number | string>
   const [B, setB] = useState(num(initial?.B, 0.5));
   const [area, setArea] = useState(num(initial?.area, 1.0));
   const [angleDeg, setAngleDeg] = useState(num(initial?.angle, 0));
+
+  useEffect(() => {
+    if (initial?.B !== undefined) setB(num(initial.B, 0.5));
+  }, [initial?.B]);
+
+  useEffect(() => {
+    if (initial?.area !== undefined) setArea(num(initial.area, 1.0));
+  }, [initial?.area]);
+
+  useEffect(() => {
+    if (initial?.angle !== undefined) setAngleDeg(num(initial.angle, 0));
+  }, [initial?.angle]);
   const [animating, setAnimating] = useState(false);
   const [t, setT] = useState(0);
 
@@ -231,6 +243,14 @@ function PhotoelectricSim({ initial }: { initial?: Record<string, number | strin
   const [freq, setFreq] = useState(num(initial?.freq, 6.0)); // 单位 1e14 Hz
   const [intensity, setIntensity] = useState(num(initial?.intensity, 0.5));
 
+  useEffect(() => {
+    if (initial?.freq !== undefined) setFreq(num(initial.freq, 6.0));
+  }, [initial?.freq]);
+
+  useEffect(() => {
+    if (initial?.intensity !== undefined) setIntensity(num(initial.intensity, 0.5));
+  }, [initial?.intensity]);
+
   const h = 4.136e-15; // eV·s
   const E_photon = h * (freq * 1e14); // eV
   const Ek = Math.max(0, E_photon - W);
@@ -336,6 +356,18 @@ function DoubleSlitSim({ initial }: { initial?: Record<string, number | string> 
   const [d, setD] = useState(num(initial?.d, 0.2));
   const [L, setL] = useState(num(initial?.L, 1.0));
 
+  useEffect(() => {
+    if (initial?.lambda !== undefined) setLambda(num(initial.lambda, 600));
+  }, [initial?.lambda]);
+
+  useEffect(() => {
+    if (initial?.d !== undefined) setD(num(initial.d, 0.2));
+  }, [initial?.d]);
+
+  useEffect(() => {
+    if (initial?.L !== undefined) setL(num(initial.L, 1.0));
+  }, [initial?.L]);
+
   // dy = lambda * L / d 单位 m → mm
   const lambdaM = lambda * 1e-9;
   const dM = d * 1e-3;
@@ -428,6 +460,14 @@ function DoubleSlitSim({ initial }: { initial?: Record<string, number | string> 
 function NewtonBlockSim({ initial }: { initial?: Record<string, number | string> }) {
   const [angle, setAngle] = useState(num(initial?.angle, 30));
   const [mu, setMu] = useState(num(initial?.mu, 0.1));
+
+  useEffect(() => {
+    if (initial?.angle !== undefined) setAngle(num(initial.angle, 30));
+  }, [initial?.angle]);
+
+  useEffect(() => {
+    if (initial?.mu !== undefined) setMu(num(initial.mu, 0.1));
+  }, [initial?.mu]);
   const g = 9.8;
   const angleRad = (angle * Math.PI) / 180;
   const a = g * (Math.sin(angleRad) - mu * Math.cos(angleRad));

@@ -7,7 +7,7 @@
 import { notFound } from 'next/navigation';
 import { getChapter } from '@/lib/wulian/agents/chapter';
 import { getPersona } from '@/lib/wulian/agents/persona';
-import { LessonRoom } from '../../components/LessonRoom';
+import { InitGate } from '../../components/InitGate';
 
 export default async function LessonPage({
   params,
@@ -23,5 +23,6 @@ export default async function LessonPage({
     ? await getPersona(chapter.secondaryScientist)
     : null;
 
-  return <LessonRoom chapter={chapter} teacher={teacher} secondary={secondary} />;
+  return <InitGate chapter={chapter} teacher={teacher} secondary={secondary} />;
 }
+

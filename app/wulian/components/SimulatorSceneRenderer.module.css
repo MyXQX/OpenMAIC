@@ -1,0 +1,80 @@
+/* Wulian 模拟器场景渲染器样式 */
+
+.wulian-simulator-scene {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: var(--w-panel);
+  border-radius: 12px;
+  border: 1px solid var(--w-border);
+}
+
+/* 教学要点提示 */
+.simulator-teaching-hint {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(216, 160, 74, 0.1);
+  border-left: 3px solid var(--w-accent);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--w-ink);
+  line-height: 1.6;
+}
+
+.hint-icon {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* 交互目标 */
+.simulator-interaction-goal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(108, 170, 239, 0.08);
+  border-left: 3px solid rgba(108, 170, 239, 0.5);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--w-ink-soft);
+  line-height: 1.6;
+}
+
+.goal-icon {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* 只读模式提示 */
+.simulator-readonly-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--w-ink-soft);
+}
+
+/* 只读模式下的模拟器容器（禁用交互） */
+.simulator-readonly {
+  pointer-events: none;
+  opacity: 0.85;
+  user-select: none;
+}
+
+.simulator-readonly::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.02);
+  pointer-events: none;
+  border-radius: 8px;
+}

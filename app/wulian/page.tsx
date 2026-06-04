@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { loadAllChapters } from '@/lib/wulian/agents/chapter';
 import { loadAllPersonas } from '@/lib/wulian/agents/persona';
 import type { Chapter, ScientistPersona } from '@/lib/wulian/types';
+import { AuthHeader } from './components/AuthHeader';
 
 export default async function WulianHomePage() {
   const chapters = await loadAllChapters();
@@ -17,7 +18,9 @@ export default async function WulianHomePage() {
 
   return (
     <div className="w-home">
+      <AuthHeader />
       <header className="w-home-hero">
+
         <div>
           <div className="w-brand">物联智讲 · OpenMAIC × Physics</div>
           <h1>

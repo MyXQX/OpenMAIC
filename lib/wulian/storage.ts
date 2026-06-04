@@ -192,7 +192,25 @@ export { writeJsonFileAtomic };
  * 复用 MAIC `writeJsonFileAtomic`（temp + rename）确保不产生半写文件（需求 8.2）。
  */
 export async function writeUserJsonAtomic(filePath: string, data: unknown): Promise<void> {
-  await writeJsonFileAtomic(filePath, data);
+  let retries = 5;
+  while (retries > 0) {
+    try {
+      await writeJsonFileAtomic(filePath, data);
+      return;
+    } catch (err) {
+      const isEperm =
+        err &&
+        typeof err === 'object' &&
+        'code' in err &&
+        (err.code === 'EPERM' || err.code === 'EACCES');
+      if (isEperm && retries > 1) {
+        retries--;
+        await new Promise((resolve) => setTimeout(resolve, 25));
+      } else {
+        throw err;
+      }
+    }
+  }
 }
 
 /** 读取用户隔离的 JSON 文件；不存在时返回 null。 */

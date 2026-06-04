@@ -48,6 +48,9 @@ import type {
   WidgetAnnotationAction,
   WidgetRevealAction,
 } from '@/lib/types/action';
+import { getSimulator } from '@/lib/wulian/simulators/registry';
+import { wulianSimulatorToInteractiveContent } from '@/lib/wulian/simulators/scene-adapter';
+import type { WulianSimulatorSceneConfig } from '@/lib/wulian/simulators/scene-adapter';
 import type {
   AgentInfo,
   SceneGenerationContext,
@@ -313,6 +316,11 @@ export async function generateSceneContent(
         widgetType: 'simulation' as WidgetType,
         widgetOutline: { concept: outline.title },
       };
+    }
+
+    // Support wulian-simulator (Rework task 6.2)
+    if (outline.widgetType === ('wulian-simulator' as any)) {
+      return generateWulianSimulatorContent(outline, aiCall, languageDirective);
     }
 
     // Route to widget generation (handles all 5 types)
@@ -1022,6 +1030,112 @@ function extractHtml(response: string): string | null {
   log.error('Could not extract HTML from response');
   log.error('Response preview:', response.substring(0, 200));
   return null;
+}
+
+// ==================== Wulian Simulator Generation (Rework task 6.2) ====================
+
+/**
+ * Generate physics simulator content (Wulian Classroom Rework)
+ */
+async function generateWulianSimulatorContent(
+  outline: SceneOutline,
+  aiCall: AICallFn,
+  languageDirective?: string,
+): Promise<GeneratedInteractiveContent | null> {
+  const simulatorId = outline.widgetOutline?.concept || (outline.interactiveConfig?.conceptName) || '';
+  const sim = getSimulator(simulatorId);
+  if (!sim) {
+    log.error(`Simulator not found for outline ${outline.title}: ${simulatorId}`);
+    return null;
+  }
+
+  const paramsListText = sim.params.map(p => `- ${p.key} (${p.label}): 范围 [${p.min}, ${p.max}], 默认值 ${p.default} ${p.unit || ''}`).join('\n');
+
+  const systemPrompt = `You are an expert physics educator. You are setting up a physical simulator scene for "${sim.title}".
+Format your response as a valid JSON object. No explanation, no markdown code block wrapper.
+JSON schema:
+{
+  "initialParams": {
+     // initial values for parameters, within their valid ranges
+  },
+  "teachingHint": "short instruction teaching hint",
+  "interactionGoal": "exploration goal for the student",
+  "teacherActions": [
+     // a list of actions that the teacher performs during the lecture
+     // Supported types:
+     // - {"type": "speech", "content": "text to speak"}
+     // - {"type": "setState", "value": { "paramName": number_value }, "content": "text to speak while setting state"}
+     // - {"type": "highlight", "target": "paramName", "content": "text to speak while highlighting"}
+  ]
+}`;
+
+  const userPrompt = `Set up the "${sim.title}" simulator.
+Outline Details:
+Title: ${outline.title}
+Description: ${outline.description}
+Key Points:
+${(outline.keyPoints || []).join('\n')}
+
+Simulator Parameters:
+${paramsListText}
+
+Generate the initial parameter values and the teacher's lecture script actions for this simulator. Match the tone to Chinese: ${languageDirective || '中文讲解'}`;
+
+  try {
+    const response = await aiCall(systemPrompt, userPrompt);
+    const parsed = parseJsonResponse<{
+      initialParams: Record<string, number>;
+      teachingHint: string;
+      interactionGoal: string;
+      teacherActions: Array<{ type: string; target?: string; value?: Record<string, number>; content?: string; label?: string }>;
+    }>(response);
+
+    if (!parsed) {
+      log.error(`Failed to parse simulator AI response for: ${outline.title}`);
+      return null;
+    }
+
+    // Build configuration
+    const config: WulianSimulatorSceneConfig = {
+      simulatorId: sim.id,
+      initialParams: parsed.initialParams || {},
+      teachingHint: parsed.teachingHint || `探索 ${sim.title}`,
+      interactionGoal: parsed.interactionGoal || '调整参数，观察现象变化',
+    };
+
+    // Ensure parameters are validated/within bounds
+    for (const p of sim.params) {
+      if (config.initialParams[p.key] === undefined) {
+        config.initialParams[p.key] = p.default;
+      } else {
+        // clamp to bounds
+        config.initialParams[p.key] = Math.max(p.min, Math.min(p.max, config.initialParams[p.key]));
+      }
+    }
+
+    // Adapt to InteractiveContent
+    const interactiveContent = wulianSimulatorToInteractiveContent(config);
+
+    // Map teacherActions
+    const teacherActions = (parsed.teacherActions || []).map((ta, idx) => ({
+      id: `ta_${idx}`,
+      type: ta.type as any,
+      label: ta.label || (ta.type === 'setState' ? '调整参数' : ta.type === 'highlight' ? '重点关注' : '教师讲解'),
+      target: ta.target || (ta.value ? 'params' : undefined),
+      value: ta.value,
+      content: ta.content,
+    }));
+
+    return {
+      html: interactiveContent.html || '',
+      widgetType: 'wulian-simulator' as any,
+      widgetConfig: config as any,
+      teacherActions: teacherActions as any,
+    };
+  } catch (error) {
+    log.error(`Error generating wulian simulator content:`, error);
+    return null;
+  }
 }
 
 // ==================== Ultra Mode Widget Generation ====================
